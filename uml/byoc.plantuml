@@ -1,0 +1,53 @@
+@startuml
+
+skinparam shadowing false
+
+skinparam package<<Layout>> {
+  borderColor Transparent
+  backgroundColor Transparent
+  FontColor Transparent
+  stereotypeFontColor Transparent
+}
+
+package Braking <<Rectangle>> {
+    [Brake System] as bs
+    [Brake Pedal] as bp
+}
+package Accelerate <<Rectangle>> {
+    [Accelerator Pedal] as ap
+    [Engine] as eng
+}
+
+package Control/Info <<Rectangle>>{
+    [Information Cluster] as ic
+    [ECU] as ecu
+}
+
+[HandBrake] as hb
+
+bp -[hidden]-> ap
+
+hb -[hidden]-> ic
+
+ap --> ecu : 0x01
+ap --> ic : 0x01
+ap -right-> eng : 0x01
+
+bp --> ecu : 0x02
+bp -right-> bs : 0x02
+
+eng -right-> ecu : 0x03
+bs -right-> ecu : 0x04
+
+bs -[hidden]- eng
+
+ecu -right-> ic : 0x06
+
+hb -up-> ecu : 0x05
+hb -up-> ic : 0x05
+
+bp -> ic : 0x02
+
+
+
+@enduml
