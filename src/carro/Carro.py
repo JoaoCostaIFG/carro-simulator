@@ -16,7 +16,7 @@ class Carro:
         # ParkingBrake       UnparkingBrake
         [CarroState.Invalid, CarroState.Invalid],  # Invalid
         [CarroState.Parked, CarroState.Ready],  # Parked
-        [CarroState.Invalid, CarroState.Invalid],  # Ready
+        [CarroState.Parked, CarroState.Ready],  # Ready
         [CarroState.Invalid, CarroState.Invalid],  # Driving
     ]
 
@@ -37,3 +37,6 @@ class Carro:
 
     def getParkingBrakeState(self):
         return self.parkingBrakeState
+
+    def update(self, timeSinceLastTick: float):
+        # DO STUFF
