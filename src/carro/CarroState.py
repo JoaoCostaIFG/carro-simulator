@@ -1,7 +1,10 @@
 from enum import Enum
 
+from carro.CarroTransition import CarroTransition
+
 
 class CarroState(Enum):
-    Parked = -1
-    Ready = 0
-    Driving = 1
+    Invalid = -1
+    Parked = 0
+    Ready = 1
+    Driving = 2
