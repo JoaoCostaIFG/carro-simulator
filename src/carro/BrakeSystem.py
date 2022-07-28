@@ -3,6 +3,7 @@ class BrakeSystem:
     pedal: int = 0  # 0 - unactioned || 100 - fully actioned
 
     def setPedal(self, val):
+        assert val >= 0 and val <= 100
         self.pedal = val
 
     def getDecelation(self):
