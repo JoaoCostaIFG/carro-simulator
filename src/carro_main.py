@@ -2,6 +2,8 @@
 
 import can
 
+import carro.Carro
+
 
 def send_one():
     """Sends a single message."""
