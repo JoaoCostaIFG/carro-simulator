@@ -1,0 +1,40 @@
+#:kivy 1.0.9
+
+<GuiWidget>:
+    GridLayout:
+        size: root.size
+        rows: 2
+        cols: 2
+        padding: 10
+        spacing: 10
+        GridLayout:
+            rows: 2
+            cols: 2
+            padding: 10
+            spacing: 10
+            Label:
+                text: 'Brake Pedal' 
+            BoxLayout:
+                Slider:
+                    id: brakeSlider
+                    min: 0
+                    max: 100
+                    step: 1
+                    orientation: 'vertical'
+                Label:
+                    text: str(slider.value)
+            Label:
+                text: 'Accelerator Pedal'
+            Slider:
+                id: acceleratorSlider
+                min: 0
+                max: 100
+                step: 1
+                orientation: 'vertical'
+        Label:
+            text: ''
+        Label:
+            text: ''
+        Label:
+            text: ''
+        
