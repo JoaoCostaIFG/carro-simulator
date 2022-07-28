@@ -3,6 +3,7 @@
 import can
 
 import carro.Carro
+from carro.carro import Carro
 
 
 def send_one():
@@ -32,5 +33,6 @@ def recv_one():
 
 
 if __name__ == "__main__":
-    send_one()
+    Carro()
+    # send_one()
     # recv_one()
