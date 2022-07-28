@@ -13,7 +13,18 @@
             padding: 10
             spacing: 10
             Label:
-                text: 'Brake Pedal' 
+                text: 'Accelerator Pedal' 
+            BoxLayout:
+                Slider:
+                    id: accelSlider
+                    min: 0
+                    max: 100
+                    step: 1
+                    orientation: 'vertical'
+                Label:
+                    text: str(accelSlider.value)
+            Label:
+                text: 'Brake Pedal'
             BoxLayout:
                 Slider:
                     id: brakeSlider
@@ -22,15 +33,7 @@
                     step: 1
                     orientation: 'vertical'
                 Label:
-                    text: str(slider.value)
-            Label:
-                text: 'Accelerator Pedal'
-            Slider:
-                id: acceleratorSlider
-                min: 0
-                max: 100
-                step: 1
-                orientation: 'vertical'
+                    text: str(brakeSlider.value)
         Label:
             text: ''
         Label:
