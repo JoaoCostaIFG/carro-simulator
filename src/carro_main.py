@@ -35,6 +35,7 @@ def recv_one():
 
 if __name__ == "__main__":
     c: Carro = Carro()
+    c.setParkingBrakeState(False)
     c.setAccelerationPedal(100)
     prevTime: float = monotonic()
 
@@ -45,6 +46,6 @@ if __name__ == "__main__":
         prevTime = newTime
 
         i += 1
-        print(c.getSpeed(), i * 0.05)
+        print(f"t: {i * 0.05} - s: {c.getSpeed()} - state: {c.state}")
 
         sleep(0.05)  # wait next tick
