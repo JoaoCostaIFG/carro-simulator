@@ -4,7 +4,7 @@ from carro.CarroTransition import CarroTransition
 
 
 class CarroState(Enum):
-    Invalid = -1
-    Parked = 0
-    Ready = 1
-    Driving = 2
+    Invalid = 0
+    Parked = 1
+    Ready = 2
+    Driving = 3
