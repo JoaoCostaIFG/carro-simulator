@@ -20,7 +20,9 @@ class Carro:
     ]
     # fmt: on
 
-    def __init__(self) -> None:
+    def __init__(self, id) -> None:
+        self._id: int = id
+
         self.brakeSystem: BrakeSystem = BrakeSystem()
         self.engine: Engine = Engine()
 
@@ -28,6 +30,10 @@ class Carro:
         self.parkingBrakeState: bool = True  # False - not active || True - active
         self.speed: float = 0.0  # km/h
         self.timeStopped: float = 0.0  # s
+
+    @property
+    def id(self) -> int:
+        return self._id
 
     def transition(self, trans: CarroTransition) -> CarroState:
         newState: CarroState = Carro.transitions[self.state.value][trans.value]
