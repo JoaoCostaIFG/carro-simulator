@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
+from time import sleep, monotonic
+
 import can
 
-import carro.Carro
-from carro.carro import Carro
+from carro.Carro import Carro
 
 
 def send_one():
@@ -33,6 +34,17 @@ def recv_one():
 
 
 if __name__ == "__main__":
-    Carro()
-    # send_one()
-    # recv_one()
+    c: Carro = Carro()
+    c.setAccelerationPedal(100)
+    prevTime: float = monotonic()
+
+    i = 0
+    while True:
+        newTime: float = monotonic()
+        c.update(newTime - prevTime)
+        prevTime = newTime
+
+        i += 1
+        print(c.getSpeed(), i * 0.05)
+
+        sleep(0.05)  # wait next tick
