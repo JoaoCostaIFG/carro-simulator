@@ -16,24 +16,26 @@
                 text: 'Accelerator Pedal' 
             BoxLayout:
                 Slider:
-                    id: accelSlider
+                    id: _accelSlider
                     min: 0
                     max: 100
                     step: 1
                     orientation: 'vertical'
+                    on_touch_up: root.onChangeAccel()
                 Label:
-                    text: str(accelSlider.value)
+                    text: str(_accelSlider.value)
             Label:
                 text: 'Brake Pedal'
             BoxLayout:
                 Slider:
-                    id: brakeSlider
+                    id: _brakeSlider
                     min: 0
                     max: 100
                     step: 1
                     orientation: 'vertical'
+                    on_touch_up: root.onChangeBrake()
                 Label:
-                    text: str(brakeSlider.value)
+                    text: str(_brakeSlider.value)
         Label:
             text: ''
         Label:
