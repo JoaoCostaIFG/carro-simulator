@@ -1,0 +1,51 @@
+#:kivy 1.0.9
+
+<GuiWidget>:
+    GridLayout:
+        size: root.size
+        rows: 2
+        cols: 2
+        padding: 10
+        spacing: 10
+        GridLayout:
+            rows: 2
+            cols: 2
+            padding: 10
+            spacing: 10
+            Label:
+                text: 'Accelerator Pedal' 
+            BoxLayout:
+                Slider:
+                    id: _accelSlider
+                    min: 0
+                    max: 100
+                    step: 1
+                    orientation: 'vertical'
+                    on_touch_up: root.onChangeAccel()
+                Label:
+                    text: str(_accelSlider.value)
+            Label:
+                text: 'Brake Pedal'
+            BoxLayout:
+                Slider:
+                    id: _brakeSlider
+                    min: 0
+                    max: 100
+                    step: 1
+                    orientation: 'vertical'
+                    on_touch_up: root.onChangeBrake()
+                Label:
+                    text: str(_brakeSlider.value)
+        BoxLayout:
+            padding: 50
+            Label:
+                text: 'Hand Brake'
+            Switch:
+                active: True
+                id: _parkingSwitch
+                on_active: root.onChangeHandBrake(self.active)
+        Label:
+            text: ''
+        Label:
+            text: ''
+        
