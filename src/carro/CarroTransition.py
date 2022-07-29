@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class CarroTransition(Enum):
+class CarroTransition(IntEnum):
     ParkingBrake = 0
     UnparkingBrake = 1
     BeganDriving = 2

@@ -1,9 +1,9 @@
-from enum import Enum
+from enum import IntEnum
 
 from carro.CarroTransition import CarroTransition
 
 
-class CarroState(Enum):
+class CarroState(IntEnum):
     Invalid = 0
     Parked = 1
     Ready = 2
