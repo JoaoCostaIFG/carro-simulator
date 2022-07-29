@@ -36,8 +36,14 @@
                     on_touch_up: root.onChangeBrake()
                 Label:
                     text: str(_brakeSlider.value)
-        Label:
-            text: ''
+        BoxLayout:
+            padding: 50
+            Label:
+                text: 'Hand Brake'
+            Switch:
+                active: True
+                id: _parkingSwitch
+                on_active: root.onChangeHandBrake(self.active)
         Label:
             text: ''
         Label:
