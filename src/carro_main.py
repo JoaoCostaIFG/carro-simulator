@@ -16,8 +16,8 @@ async def carroUpdateLoop():
     global c
 
     # TODO remove
-    c.setParkingBrakeState(False)
-    c.setAccelerationPedal(100)
+    c.parkingBrake = False
+    c.engine.pedal = 100
 
     period: float = 0.05
     prevTime: float = monotonic()
@@ -36,7 +36,7 @@ async def carroEngineReport():
 
     period: float = 0.05
     while True:
-        msg: SimMessage = SimMessage(MessageType.Engine).pack(c.engine)
+        msg: SimMessage = SimMessage(MessageType.Engine).pack(c.engine.acceleration)
         c.sendMsg(msg)
         await asyncio.sleep(period)  # wait next period
 
@@ -46,7 +46,7 @@ async def carroBrakeReport():
 
     period: float = 0.05
     while True:
-        msg: SimMessage = SimMessage(MessageType.BrakeSystem).pack(c.brake)
+        msg: SimMessage = SimMessage(MessageType.BrakeSystem).pack(c.brake.deceleration)
         c.sendMsg(msg)
         await asyncio.sleep(period)  # wait next period
 

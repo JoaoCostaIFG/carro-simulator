@@ -4,10 +4,14 @@ class BrakeSystem:
     def __init__(self) -> None:
         self._pedal: int = 0  # 0 - unactioned || 100 - fully actioned
 
-    # TODO setter
-    def setPedal(self, val: int) -> None:
-        # TODO exception
-        assert val >= 0 and val <= 100
+    @property
+    def pedal(self) -> int:
+        return self._pedal
+
+    @pedal.setter
+    def pedal(self, val: int) -> None:
+        if val < 0 or val > 100:
+            raise ValueError("Pedal value must be in interval [0, 100].")
         self._pedal = val
 
     @property

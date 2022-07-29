@@ -47,21 +47,27 @@ class Carro:
     def parkingBrake(self) -> bool:
         return self._parkingBrakeState
 
+    @parkingBrake.setter
+    def parkingBrake(self, brakeState: bool) -> None:
+        trans: CarroState = CarroTransition.ParkingBrake
+        if self._parkingBrakeState and not brakeState:
+            trans = CarroTransition.UnparkingBrake
+
+        if self.transition(trans) == CarroState.Invalid:
+            raise ValueError("Can't activate the parking brake right now.")
+        self._parkingBrakeState = brakeState
+
     @property
     def speed(self) -> float:
         return self._speed
 
     @property
-    def engine(self) -> float:
-        return self._engine.acceleration
+    def engine(self) -> Engine:
+        return self._engine
 
     @property
-    def rpm(self) -> float:
-        return self._engine.rpm
-
-    @property
-    def brake(self) -> float:
-        return self._brakeSystem.deceleration
+    def brake(self) -> BrakeSystem:
+        return self._brakeSystem
 
     def transition(self, trans: CarroTransition) -> CarroState:
         newState: CarroState = Carro._transitions[self._state.value][trans.value]
@@ -73,21 +79,6 @@ class Carro:
                 file=stderr,
             )
         return newState
-
-    # TODO setter
-    def setParkingBrakeState(self, brakeState: bool) -> bool:
-        trans: CarroState = CarroTransition.ParkingBrake
-        if self._parkingBrakeState and not brakeState:
-            trans = CarroTransition.UnparkingBrake
-
-        if self.transition(trans) == CarroState.Invalid:
-            return False
-        self._parkingBrakeState = brakeState
-        return True
-
-    # TODO setter
-    def setAccelerationPedal(self, val: int) -> None:
-        return self._engine.setPedal(val)
 
     def update(self, deltaTime: float) -> None:
         # update car speed (care for m/s to km/h conversion)
