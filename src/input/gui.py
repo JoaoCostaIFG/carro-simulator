@@ -1,12 +1,9 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.uix.slider import Slider
 from kivy.config import Config
 
 from Pedal import Pedal
 from HandBrake import HandBrake
-
-s = Slider(value_track=True, value_track_color=[1, 0, 0, 1])
 
 
 class GuiWidget(Widget):
