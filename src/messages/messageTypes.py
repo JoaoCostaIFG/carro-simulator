@@ -10,6 +10,7 @@ class MessageType(IntEnum):
     CarStatus = 0x06
 
 
+# care that can bus can only take bytearrays of max len 8
 _messageFormats = {
     MessageType.AccelleratorPedalPosition.value: "B",
     MessageType.BrakePedalPosition.value: "B",

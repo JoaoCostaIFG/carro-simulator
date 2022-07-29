@@ -23,10 +23,7 @@ class Carro:
     ]
     # fmt: on
 
-    def __init__(self, id, bus) -> None:
-        self._id: int = id
-        self._bus = bus
-
+    def __init__(self) -> None:
         self._brakeSystem: BrakeSystem = BrakeSystem()
         self._engine: Engine = Engine()
 
@@ -34,10 +31,6 @@ class Carro:
         self._parkingBrakeState: bool = True  # False - not active || True - active
         self._speed: float = 0.0  # km/h
         self._timeStopped: float = 0.0  # s
-
-    @property
-    def id(self) -> int:
-        return self._id
 
     @property
     def state(self) -> CarroState:
@@ -82,12 +75,13 @@ class Carro:
 
     def update(self, deltaTime: float) -> None:
         # update car speed (care for m/s to km/h conversion)
-        deltaSpeed: float = deltaTime * (
-            self._engine.acceleration - self._brakeSystem.deceleration
-        )
-        newSpeed: float = self._speed + deltaSpeed * 3.6  # 0.001 / (1/3600)
-        # clamp
-        self._speed = min(max(0.0, newSpeed), Carro._maxSpeed)
+        if self._state == CarroState.Ready or self._state == CarroState.Driving:
+            deltaSpeed: float = deltaTime * (
+                self._engine.acceleration - self._brakeSystem.deceleration
+            )
+            newSpeed: float = self._speed + deltaSpeed * 3.6  # 0.001 / (1/3600)
+            # clamp
+            self._speed = min(max(0.0, newSpeed), Carro._maxSpeed)
 
         if self._speed == 0.0:
             self._timeStopped += deltaTime
@@ -97,14 +91,3 @@ class Carro:
             self._timeStopped = 0.0
             if self._speed > 10.0:
                 self.transition(CarroTransition.BeganDriving)
-
-    # CAN bus
-    def sendMsg(self, msg: SimMessage) -> bool:
-        # TODO logging
-        canMsg: can.Message = can.Message(arbitration_id=self._id, data=msg)
-        try:
-            self._bus.send(canMsg)
-            return True
-        except can.CanError:
-            print(f"Message sending failure: [msg={msg}].", file=stderr)
-            return False
