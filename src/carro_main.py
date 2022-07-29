@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import asyncio
+from signal import SIGINT, SIGTERM
 from time import sleep, monotonic
 
 import can
@@ -33,19 +35,44 @@ def recv_one():
             print("Message NOT recv")
 
 
-if __name__ == "__main__":
-    c: Carro = Carro()
+async def carroUpdateLoop():
+    global c
+
     c.setParkingBrakeState(False)
     c.setAccelerationPedal(100)
-    prevTime: float = monotonic()
 
-    i = 0
+    tickDuration: float = 0.05
+    prevTime: float = monotonic()
     while True:
         newTime: float = monotonic()
         c.update(newTime - prevTime)
         prevTime = newTime
 
-        i += 1
-        print(f"t: {i * 0.05} - s: {c.getSpeed()} - state: {c.state}")
+        print(f" state: {c.state} - s: {c.getSpeed()}")
 
-        sleep(0.05)  # wait next tick
+        await asyncio.sleep(tickDuration)  # wait next tick
+
+
+async def main():
+    for signal in [SIGINT, SIGTERM]:
+        loop.add_signal_handler(signal, asyncio.current_task().cancel)
+
+    # spawn tasks
+    tasks = set()
+    # carro update loop
+    taskCUP = asyncio.create_task(carroUpdateLoop())
+    tasks.add(taskCUP)
+    taskCUP.add_done_callback(tasks.discard)
+
+    try:
+        await asyncio.gather(*tasks, return_exceptions=False)
+    except asyncio.CancelledError:
+        # expected from the signal handler
+        pass
+
+
+if __name__ == "__main__":
+    c: Carro = Carro()
+
+    loop = asyncio.new_event_loop()
+    loop.run_until_complete(main())
