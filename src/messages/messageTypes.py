@@ -1,5 +1,6 @@
 from enum import IntEnum
 
+
 class MessageType(IntEnum):
     AccelleratorPedalPosition = 0x01
     BrakePedalPosition = 0x02
@@ -8,11 +9,12 @@ class MessageType(IntEnum):
     ParkingBrake = 0x05
     CarStatus = 0x06
 
+
 _messageFormats = {
-    MessageType.AccelleratorPedalPosition.value: 's',
-    MessageType.BrakePedalPosition.value: 's',
-    MessageType.Engine.value: 'f',
-    MessageType.BrakeSystem.value: 'f',
-    MessageType.ParkingBrake.value: '?',
-    MessageType.CarStatus.value: 'fs',    
+    MessageType.AccelleratorPedalPosition.value: "B",
+    MessageType.BrakePedalPosition.value: "B",
+    MessageType.Engine.value: "f",
+    MessageType.BrakeSystem.value: "f",
+    MessageType.ParkingBrake.value: "?",
+    MessageType.CarStatus.value: "fB",
 }

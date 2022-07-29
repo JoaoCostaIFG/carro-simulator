@@ -1,12 +1,19 @@
 class BrakeSystem:
-    maxDeceleration: float = 6  # m/s^2
+    _maxDeceleration: float = 6  # m/s^2
 
     def __init__(self) -> None:
-        self.pedal: int = 0  # 0 - unactioned || 100 - fully actioned
+        self._pedal: int = 0  # 0 - unactioned || 100 - fully actioned
 
-    def setPedal(self, val: int) -> None:
-        assert val >= 0 and val <= 100
-        self.pedal = val
+    @property
+    def pedal(self) -> int:
+        return self._pedal
 
-    def getDeceleration(self) -> float:
-        return BrakeSystem.maxDeceleration * (self.pedal / 100.0)
+    @pedal.setter
+    def pedal(self, val: int) -> None:
+        if val < 0 or val > 100:
+            raise ValueError("Pedal value must be in interval [0, 100].")
+        self._pedal = val
+
+    @property
+    def deceleration(self) -> float:
+        return BrakeSystem._maxDeceleration * (self._pedal / 100.0)

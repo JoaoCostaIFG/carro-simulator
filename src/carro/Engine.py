@@ -1,16 +1,24 @@
 class Engine:
-    maxAcceleration: float = 5  # m/s^2
-    maxRPM: int = 8000
+    _maxAcceleration: float = 5  # m/s^2
+    _maxRPM: int = 8000
 
     def __init__(self) -> None:
-        self.pedal: int = 0  # 0 - not acceleration || 100 - max acceleration
+        self._pedal: int = 0  # 0 - not acceleration || 100 - max acceleration
 
-    def setPedal(self, val: int) -> None:
-        assert val >= 0 and val <= 100
-        self.pedal = val
+    @property
+    def pedal(self) -> int:
+        return self._pedal
 
-    def getAcceleration(self) -> float:
-        return Engine.maxAcceleration * (self.pedal / 100.0)
+    @pedal.setter
+    def pedal(self, val: int) -> None:
+        if val < 0 or val > 100:
+            raise ValueError("Pedal value must be in interval [0, 100].")
+        self._pedal = val
 
-    def getRPM(self) -> float:
-        return Engine.maxRPM * (self.pedal / 100.0)
+    @property
+    def acceleration(self) -> float:
+        return Engine._maxAcceleration * (self._pedal / 100.0)
+
+    @property
+    def rpm(self) -> float:
+        return Engine._maxRPM * (self._pedal / 100.0)

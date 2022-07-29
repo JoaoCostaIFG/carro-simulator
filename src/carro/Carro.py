@@ -1,17 +1,20 @@
-import sys
+from sys import stderr
+
+import can
 
 from carro.BrakeSystem import BrakeSystem
 from carro.Engine import Engine
 from carro.CarroState import CarroState
 from carro.CarroTransition import CarroTransition
+from messages.SimMessage import SimMessage
 
 
 class Carro:
-    weight: int = 1500  # Kg
-    maxSpeed: float = 250  # km/h
+    _weight: int = 1500  # Kg
+    _maxSpeed: float = 250  # km/h
 
     # fmt: off
-    transitions = [
+    _transitions = [
         # ParkingBrake          UnparkingBrake      BeganDriving        Stopped
         [CarroState.Invalid,    CarroState.Invalid, CarroState.Invalid, CarroState.Invalid],    # Invalid
         [CarroState.Parked,     CarroState.Ready,   CarroState.Invalid, CarroState.Parked],     # Parked
@@ -20,59 +23,88 @@ class Carro:
     ]
     # fmt: on
 
-    def __init__(self) -> None:
-        self.brakeSystem: BrakeSystem = BrakeSystem()
-        self.engine: Engine = Engine()
+    def __init__(self, id, bus) -> None:
+        self._id: int = id
+        self._bus = bus
 
-        self.state: CarroState = CarroState.Parked
-        self.parkingBrakeState: bool = True  # False - not active || True - active
-        self.speed: float = 0.0  # km/h
-        self.timeStopped: float = 0.0  # s
+        self._brakeSystem: BrakeSystem = BrakeSystem()
+        self._engine: Engine = Engine()
 
-    def transition(self, trans: CarroTransition) -> CarroState:
-        newState: CarroState = Carro.transitions[self.state.value][trans.value]
-        if self.state != CarroState.Invalid:
-            self.state = newState
-        else:
-            print(
-                f"State transition is invalid: [state={self.state}], [transition={trans}]",
-                file=sys.stderr,
-            )
-        return newState
+        self._state: CarroState = CarroState.Parked
+        self._parkingBrakeState: bool = True  # False - not active || True - active
+        self._speed: float = 0.0  # km/h
+        self._timeStopped: float = 0.0  # s
 
-    def setParkingBrakeState(self, brakeState: bool) -> bool:
+    @property
+    def id(self) -> int:
+        return self._id
+
+    @property
+    def state(self) -> CarroState:
+        return self._state
+
+    @property
+    def parkingBrake(self) -> bool:
+        return self._parkingBrakeState
+
+    @parkingBrake.setter
+    def parkingBrake(self, brakeState: bool) -> None:
         trans: CarroState = CarroTransition.ParkingBrake
-        if self.parkingBrakeState and not brakeState:
+        if self._parkingBrakeState and not brakeState:
             trans = CarroTransition.UnparkingBrake
 
         if self.transition(trans) == CarroState.Invalid:
-            return False
-        self.parkingBrakeState = brakeState
-        return True
+            raise ValueError("Can't activate the parking brake right now.")
+        self._parkingBrakeState = brakeState
 
-    def getParkingBrakeState(self) -> bool:
-        return self.parkingBrakeState
+    @property
+    def speed(self) -> float:
+        return self._speed
 
-    def getSpeed(self) -> float:
-        return self.speed
+    @property
+    def engine(self) -> Engine:
+        return self._engine
 
-    def setAccelerationPedal(self, val: int) -> None:
-        return self.engine.setPedal(val)
+    @property
+    def brake(self) -> BrakeSystem:
+        return self._brakeSystem
+
+    def transition(self, trans: CarroTransition) -> CarroState:
+        newState: CarroState = Carro._transitions[self._state.value][trans.value]
+        if self._state != CarroState.Invalid:
+            self._state = newState
+        else:
+            print(
+                f"State transition is invalid: [state={self._state}], [transition={trans}]",
+                file=stderr,
+            )
+        return newState
 
     def update(self, deltaTime: float) -> None:
         # update car speed (care for m/s to km/h conversion)
         deltaSpeed: float = deltaTime * (
-            self.engine.getAcceleration() - self.brakeSystem.getDeceleration()
+            self._engine.acceleration - self._brakeSystem.deceleration
         )
-        self.speed += deltaSpeed * 3.6  # 0.001 / (1/3600)
+        newSpeed: float = self._speed + deltaSpeed * 3.6  # 0.001 / (1/3600)
         # clamp
-        self.speed = min(max(0.0, self.speed), Carro.maxSpeed)
+        self._speed = min(max(0.0, newSpeed), Carro._maxSpeed)
 
-        if self.speed == 0.0:
-            self.timeStopped += deltaTime
-            if self.timeStopped >= 30.0:
+        if self._speed == 0.0:
+            self._timeStopped += deltaTime
+            if self._timeStopped >= 30.0:
                 self.transition(CarroTransition.Stopped)
         else:
-            self.timeStopped = 0.0
-            if self.speed > 10.0:
+            self._timeStopped = 0.0
+            if self._speed > 10.0:
                 self.transition(CarroTransition.BeganDriving)
+
+    # CAN bus
+    def sendMsg(self, msg: SimMessage) -> bool:
+        # TODO logging
+        canMsg: can.Message = can.Message(arbitration_id=self._id, data=msg)
+        try:
+            self._bus.send(canMsg)
+            return True
+        except can.CanError:
+            print(f"Message sending failure: [msg={msg}].", file=stderr)
+            return False
