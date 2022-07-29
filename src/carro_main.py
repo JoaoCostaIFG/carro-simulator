@@ -7,6 +7,8 @@ from time import sleep, monotonic
 import can
 
 from carro.Carro import Carro
+from messages.SimMessage import SimMessage
+from messages.messageTypes import MessageType
 
 
 def send_one():
@@ -38,10 +40,11 @@ def recv_one():
 async def carroUpdateLoop():
     global c
 
+    # TODO remove
     c.setParkingBrakeState(False)
     c.setAccelerationPedal(100)
 
-    tickDuration: float = 0.05
+    period: float = 0.05
     prevTime: float = monotonic()
     while True:
         newTime: float = monotonic()
@@ -50,7 +53,37 @@ async def carroUpdateLoop():
 
         print(f" state: {c.state} - s: {c.getSpeed()}")
 
-        await asyncio.sleep(tickDuration)  # wait next tick
+        await asyncio.sleep(period)  # wait next tick
+
+
+async def carroEngineReport():
+    global c
+
+    period: float = 0.05
+    while True:
+        msg: SimMessage = SimMessage(MessageType.Engine).pack(c.getEngineAcc())
+        # TODO send message
+        await asyncio.sleep(period)  # wait next period
+
+
+async def carroBrakeReport():
+    global c
+
+    period: float = 0.05
+    while True:
+        msg: SimMessage = SimMessage(MessageType.BrakeSystem).pack(c.getBrakeDec())
+        # TODO send message
+        await asyncio.sleep(period)  # wait next period
+
+
+async def carroStatusReport():
+    global c
+
+    period: float = 0.05
+    while True:
+        msg: SimMessage = SimMessage(MessageType.CarStatus).pack(c.getSpeed())
+        # TODO send message
+        await asyncio.sleep(period)  # wait next period
 
 
 async def main():

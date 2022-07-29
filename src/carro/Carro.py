@@ -40,6 +40,9 @@ class Carro:
             )
         return newState
 
+    def getState(self) -> CarroState:
+        return self.state
+
     def setParkingBrakeState(self, brakeState: bool) -> bool:
         trans: CarroState = CarroTransition.ParkingBrake
         if self.parkingBrakeState and not brakeState:
@@ -58,6 +61,12 @@ class Carro:
 
     def setAccelerationPedal(self, val: int) -> None:
         return self.engine.setPedal(val)
+
+    def getEngineAcc(self) -> float:
+        return self.engine.getAcceleration()
+
+    def getBrakeDec(self) -> float:
+        return self.brakeSystem.getDeceleration()
 
     def update(self, deltaTime: float) -> None:
         # update car speed (care for m/s to km/h conversion)
