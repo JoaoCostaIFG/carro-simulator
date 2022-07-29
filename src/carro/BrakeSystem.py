@@ -1,12 +1,15 @@
 class BrakeSystem:
-    maxDeceleration: float = 6  # m/s^2
+    _maxDeceleration: float = 6  # m/s^2
 
     def __init__(self) -> None:
-        self.pedal: int = 0  # 0 - unactioned || 100 - fully actioned
+        self._pedal: int = 0  # 0 - unactioned || 100 - fully actioned
 
+    # TODO setter
     def setPedal(self, val: int) -> None:
+        # TODO exception
         assert val >= 0 and val <= 100
-        self.pedal = val
+        self._pedal = val
 
-    def getDeceleration(self) -> float:
-        return BrakeSystem.maxDeceleration * (self.pedal / 100.0)
+    @property
+    def deceleration(self) -> float:
+        return BrakeSystem._maxDeceleration * (self._pedal / 100.0)

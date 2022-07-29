@@ -26,7 +26,7 @@ async def carroUpdateLoop():
         c.update(newTime - prevTime)
         prevTime = newTime
 
-        print(f" state: {c.state} - s: {c.getSpeed()}")
+        print(f" state: {c.state} - s: {c.speed}")
 
         await asyncio.sleep(period)  # wait next tick
 
@@ -36,7 +36,7 @@ async def carroEngineReport():
 
     period: float = 0.05
     while True:
-        msg: SimMessage = SimMessage(MessageType.Engine).pack(c.getEngineAcc())
+        msg: SimMessage = SimMessage(MessageType.Engine).pack(c.engine)
         c.sendMsg(msg)
         await asyncio.sleep(period)  # wait next period
 
@@ -46,7 +46,7 @@ async def carroBrakeReport():
 
     period: float = 0.05
     while True:
-        msg: SimMessage = SimMessage(MessageType.BrakeSystem).pack(c.getBrakeDec())
+        msg: SimMessage = SimMessage(MessageType.BrakeSystem).pack(c.brake)
         c.sendMsg(msg)
         await asyncio.sleep(period)  # wait next period
 
@@ -56,9 +56,7 @@ async def carroStatusReport():
 
     period: float = 0.05
     while True:
-        msg: SimMessage = SimMessage(MessageType.CarStatus).pack(
-            c.getSpeed(), c.getState().value
-        )
+        msg: SimMessage = SimMessage(MessageType.CarStatus).pack(c.speed, c.state.value)
         c.sendMsg(msg)
         await asyncio.sleep(period)  # wait next period
 
@@ -94,8 +92,8 @@ async def main():
 
 
 if __name__ == "__main__":
-    c: Carro = Carro(0x123)
     loop = asyncio.new_event_loop()
     with can.interface.Bus(bustype="socketcan", channel="vcan0", bitrate=500000) as bus:
+        c: Carro = Carro(0x123, bus)
         loop.run_until_complete(main())
     loop.close()
