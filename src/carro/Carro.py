@@ -1,4 +1,4 @@
-import sys
+from sys import stderr
 
 from carro.BrakeSystem import BrakeSystem
 from carro.Engine import Engine
@@ -36,7 +36,7 @@ class Carro:
         else:
             print(
                 f"State transition is invalid: [state={self.state}], [transition={trans}]",
-                file=sys.stderr,
+                file=stderr,
             )
         return newState
 

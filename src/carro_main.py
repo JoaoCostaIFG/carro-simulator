@@ -8,7 +8,7 @@ import can
 
 from carro.Carro import Carro
 from messages.SimMessage import SimMessage
-from messages.messageTypes import MessageType
+from messages.MessageTypes import MessageType
 
 
 def send_one():
@@ -81,7 +81,9 @@ async def carroStatusReport():
 
     period: float = 0.05
     while True:
-        msg: SimMessage = SimMessage(MessageType.CarStatus).pack(c.getSpeed())
+        msg: SimMessage = SimMessage(MessageType.CarStatus).pack(
+            c.getSpeed(), c.getState().value
+        )
         # TODO send message
         await asyncio.sleep(period)  # wait next period
 
@@ -96,6 +98,18 @@ async def main():
     taskCUP = asyncio.create_task(carroUpdateLoop())
     tasks.add(taskCUP)
     taskCUP.add_done_callback(tasks.discard)
+    # carro engine report
+    taskCER = asyncio.create_task(carroEngineReport())
+    tasks.add(taskCER)
+    taskCER.add_done_callback(tasks.discard)
+    # carro brake report
+    taskCBR = asyncio.create_task(carroBrakeReport())
+    tasks.add(taskCBR)
+    taskCBR.add_done_callback(tasks.discard)
+    # carro status report
+    taskCSR = asyncio.create_task(carroStatusReport())
+    tasks.add(taskCSR)
+    taskCSR.add_done_callback(tasks.discard)
 
     try:
         await asyncio.gather(*tasks, return_exceptions=False)
