@@ -12,15 +12,6 @@ from messages.SimMessage import SimMessage
 from messages.MessageTypes import MessageType
 
 
-def recv_one():
-    with can.interface.Bus(bustype="socketcan", channel="vcan0", bitrate=500000) as bus:
-        try:
-            msg = bus.recv()
-            print(msg)
-        except can.CanError:
-            print("Message NOT recv")
-
-
 async def carroUpdateLoop():
     global c
 
@@ -46,12 +37,7 @@ async def carroEngineReport():
     period: float = 0.05
     while True:
         msg: SimMessage = SimMessage(MessageType.Engine).pack(c.getEngineAcc())
-        canMsg = can.Message(arbitration_id=c.id(), data=msg)
-        try:
-            bus.send(msg)
-        except can.CanError:
-            print(f"Message sending failure: [msg={msg}].", file=stderr)
-
+        c.sendMsg(msg)
         await asyncio.sleep(period)  # wait next period
 
 
@@ -61,7 +47,7 @@ async def carroBrakeReport():
     period: float = 0.05
     while True:
         msg: SimMessage = SimMessage(MessageType.BrakeSystem).pack(c.getBrakeDec())
-        # TODO send message
+        c.sendMsg(msg)
         await asyncio.sleep(period)  # wait next period
 
 
@@ -73,7 +59,7 @@ async def carroStatusReport():
         msg: SimMessage = SimMessage(MessageType.CarStatus).pack(
             c.getSpeed(), c.getState().value
         )
-        # TODO send message
+        c.sendMsg(msg)
         await asyncio.sleep(period)  # wait next period
 
 
@@ -108,9 +94,6 @@ async def main():
 
 
 if __name__ == "__main__":
-    # while True:
-    #     recv_one()
-
     c: Carro = Carro(0x123)
     loop = asyncio.new_event_loop()
     with can.interface.Bus(bustype="socketcan", channel="vcan0", bitrate=500000) as bus:

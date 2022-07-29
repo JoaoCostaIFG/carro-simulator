@@ -1,9 +1,12 @@
 from sys import stderr
 
+import can
+
 from carro.BrakeSystem import BrakeSystem
 from carro.Engine import Engine
 from carro.CarroState import CarroState
 from carro.CarroTransition import CarroTransition
+from messages.SimMessage import SimMessage
 
 
 class Carro:
@@ -20,8 +23,9 @@ class Carro:
     ]
     # fmt: on
 
-    def __init__(self, id) -> None:
+    def __init__(self, id, bus) -> None:
         self._id: int = id
+        self._bus = bus
 
         self.brakeSystem: BrakeSystem = BrakeSystem()
         self.engine: Engine = Engine()
@@ -91,3 +95,14 @@ class Carro:
             self.timeStopped = 0.0
             if self.speed > 10.0:
                 self.transition(CarroTransition.BeganDriving)
+
+    # CAN bus
+    def sendMsg(self, msg: SimMessage) -> bool:
+        # TODO logging
+        canMsg: can.Message = can.Message(arbitration_id=self._id, data=msg)
+        try:
+            self._bus.send(canMsg)
+            return True
+        except can.CanError:
+            print(f"Message sending failure: [msg={msg}].", file=stderr)
+            return False
