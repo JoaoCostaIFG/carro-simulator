@@ -11,10 +11,10 @@ class MessageType(IntEnum):
 
 
 _messageFormats = {
-    MessageType.AccelleratorPedalPosition.value: "s",
-    MessageType.BrakePedalPosition.value: "s",
+    MessageType.AccelleratorPedalPosition.value: "B",
+    MessageType.BrakePedalPosition.value: "B",
     MessageType.Engine.value: "f",
     MessageType.BrakeSystem.value: "f",
     MessageType.ParkingBrake.value: "?",
-    MessageType.CarStatus.value: "fs",
+    MessageType.CarStatus.value: "fB",
 }
