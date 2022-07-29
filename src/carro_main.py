@@ -61,28 +61,57 @@ async def carroStatusReport():
         await asyncio.sleep(period)  # wait next period
 
 
+async def carroParkingBrakeReport():
+    global c
+
+    period: float = 0.1
+    while True:
+        msg: SimMessage = SimMessage(MessageType.ParkingBrake).pack(c.parkingBrake)
+        c.sendMsg(msg)
+        await asyncio.sleep(period)  # wait next period
+
+
+async def carroAccPedalReport():
+    global c
+
+    period: float = 0.1
+    while True:
+        msg: SimMessage = SimMessage(MessageType.AccelleratorPedalPosition).pack(
+            c.engine.pedal
+        )
+        c.sendMsg(msg)
+        await asyncio.sleep(period)  # wait next period
+
+
+async def carroBrakePedalReport():
+    global c
+
+    period: float = 0.1
+    while True:
+        msg: SimMessage = SimMessage(MessageType.BrakePedalPosition).pack(c.brake.pedal)
+        c.sendMsg(msg)
+        await asyncio.sleep(period)  # wait next period
+
+
 async def main():
     for signal in [SIGINT, SIGTERM]:
         loop.add_signal_handler(signal, asyncio.current_task().cancel)
 
     # spawn tasks
     tasks = set()
-    # carro update loop
-    taskCUP = asyncio.create_task(carroUpdateLoop())
-    tasks.add(taskCUP)
-    taskCUP.add_done_callback(tasks.discard)
-    # carro engine report
-    taskCER = asyncio.create_task(carroEngineReport())
-    tasks.add(taskCER)
-    taskCER.add_done_callback(tasks.discard)
-    # carro brake report
-    taskCBR = asyncio.create_task(carroBrakeReport())
-    tasks.add(taskCBR)
-    taskCBR.add_done_callback(tasks.discard)
-    # carro status report
-    taskCSR = asyncio.create_task(carroStatusReport())
-    tasks.add(taskCSR)
-    taskCSR.add_done_callback(tasks.discard)
+
+    def addTask(taskFunc):
+        task = asyncio.create_task(taskFunc())
+        tasks.add(task)
+        task.add_done_callback(tasks.discard)
+
+    addTask(carroUpdateLoop)
+    addTask(carroEngineReport)
+    addTask(carroBrakeReport)
+    addTask(carroStatusReport)
+    addTask(carroParkingBrakeReport)
+    addTask(carroAccPedalReport)
+    addTask(carroBrakePedalReport)
 
     try:
         await asyncio.gather(*tasks, return_exceptions=False)
