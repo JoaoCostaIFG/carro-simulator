@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.config import Config
@@ -30,12 +32,16 @@ class GuiApp(App):
     brakePedal: Pedal = Pedal()
     handBrake: HandBrake = HandBrake()
 
-    Config.set('graphics', 'width', 800)
-    Config.set('graphics', 'height', 600)
+    Config.set("graphics", "width", 800)
+    Config.set("graphics", "height", 600)
 
     def build(self):
-        return GuiWidget(self.accelerationPedal.changePos, self.brakePedal.changePos, self.handBrake.setActive)
+        return GuiWidget(
+            self.accelerationPedal.changePos,
+            self.brakePedal.changePos,
+            self.handBrake.setActive,
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     GuiApp().run()
