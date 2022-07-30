@@ -26,15 +26,17 @@ class GuiWidget(Widget):
 
 
 class GuiApp(App):
-    accelerationPedal: Pedal = Pedal()
-    brakePedal: Pedal = Pedal()
-    handBrake: HandBrake = HandBrake()
+    def __init__(self) -> None:
+        super().__init__()
 
-    Config.set("graphics", "width", 800)
-    Config.set("graphics", "height", 600)
+        self.accelerationPedal: Pedal = Pedal()
+        self.brakePedal: Pedal = Pedal()
+        self.handBrake: HandBrake = HandBrake()
+
+        Config.set("graphics", "width", 800)
+        Config.set("graphics", "height", 600)
 
     def build(self):
-        self.accelerationPedal.setPosition(2)
         return GuiWidget(
             self.accelerationPedal.setPosition,
             self.brakePedal.setPosition,
