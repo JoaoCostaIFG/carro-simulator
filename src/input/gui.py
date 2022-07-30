@@ -15,16 +15,14 @@ class GuiWidget(Widget):
         self.changeBrake = changeBrake
         self.changeHandBrake = changeHandBrake
 
-    def onChangeAccel(self):
-        self.changeAccel(self.ids._accelSlider.value)
+    def onChangeAccel(self, sliderValue):
+        self.changeAccel(sliderValue)
 
-    def onChangeBrake(self):
-        self.changeBrake(self.ids._brakeSlider.value)
+    def onChangeBrake(self, sliderValue):
+        self.changeBrake(sliderValue)
 
     def onChangeHandBrake(self, switchValue):
         self.changeHandBrake(switchValue)
-
-    pass
 
 
 class GuiApp(App):
@@ -36,9 +34,10 @@ class GuiApp(App):
     Config.set("graphics", "height", 600)
 
     def build(self):
+        self.accelerationPedal.setPosition(2)
         return GuiWidget(
-            self.accelerationPedal.changePos,
-            self.brakePedal.changePos,
+            self.accelerationPedal.setPosition,
+            self.brakePedal.setPosition,
             self.handBrake.setActive,
         )
 

@@ -10,3 +10,6 @@ class HandBrake:
     def active(self, newValue: bool):
         self._active = newValue
         print("Changing hand brake to -> " + str(newValue))
+
+    def setActive(self, newValue: bool):
+        self.active = newValue

@@ -21,7 +21,7 @@
                     max: 100
                     step: 1
                     orientation: 'vertical'
-                    on_touch_up: root.onChangeAccel()
+                    on_touch_up: root.onChangeAccel(self.value)
                 Label:
                     text: str(_accelSlider.value)
             Label:
@@ -33,7 +33,7 @@
                     max: 100
                     step: 1
                     orientation: 'vertical'
-                    on_touch_up: root.onChangeBrake()
+                    on_touch_up: root.onChangeBrake(self.value)
                 Label:
                     text: str(_brakeSlider.value)
         BoxLayout:
