@@ -1,7 +1,7 @@
 from email import message
 import struct
 from typing import List
-from messages.MessageTypes import _messageFormats, MessageType
+from messages.messageTypes import _messageFormats, MessageType
 
 
 class SimMessage:

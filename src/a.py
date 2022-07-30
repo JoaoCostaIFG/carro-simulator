@@ -3,9 +3,8 @@
 from argparse import ArgumentDefaultsHelpFormatter
 from sys import stderr
 import can
-from messages.MessageTypes import MessageType
-
-from messages.SimMessage import SimMessage
+from messages.messageTypes import MessageType
+from messages.simMessage import SimMessage
 
 with can.interface.Bus(bustype="socketcan", channel="vcan0", bitrate=500000) as bus:
     while True:
@@ -17,7 +16,8 @@ with can.interface.Bus(bustype="socketcan", channel="vcan0", bitrate=500000) as 
             val = int(input())
             msg = can.Message(
                 arbitration_id=MessageType.AccelleratorPedalPosition,
-                data=SimMessage(MessageType.AccelleratorPedalPosition).pack(val),
+                data=SimMessage(
+                    MessageType.AccelleratorPedalPosition).pack(val),
             )
         elif cmd == 2:
             # brake

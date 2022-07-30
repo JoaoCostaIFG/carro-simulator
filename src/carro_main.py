@@ -10,10 +10,12 @@ from sys import stderr
 import can
 
 from carro.Carro import Carro
-from messages.SimMessage import SimMessage
-from messages.MessageTypes import MessageType
+from messages.simMessage import SimMessage
+from messages.messageTypes import MessageType
 
 # CAN bus
+
+
 def sendMsg(arbitrationId: int, msg: bytearray) -> None:
     global bus
 
@@ -36,7 +38,8 @@ def procMsg(canMsg: can.Message) -> None:
     try:
         id: MessageType = MessageType(canMsg.arbitration_id)
     except ValueError:
-        print(f"Invalid arbitration ID: [id={canMsg.arbitration_id}].", file=stderr)
+        print(
+            f"Invalid arbitration ID: [id={canMsg.arbitration_id}].", file=stderr)
         return
 
     try:
@@ -51,7 +54,8 @@ def procMsg(canMsg: can.Message) -> None:
             )
             c.brake.pedal = data[0]
         elif id == MessageType.ParkingBrake:
-            data: bytearray = SimMessage(MessageType.ParkingBrake).unpack(canMsg.data)
+            data: bytearray = SimMessage(
+                MessageType.ParkingBrake).unpack(canMsg.data)
             c.parkingBrake = data[0]
         else:
             # ignore unwanted messages
@@ -112,10 +116,12 @@ async def main():
 
     # spawn tasks
     tasks: Set[asyncio.Task] = set()
+
     # carro update loop
     updateLoop = asyncio.create_task(carroUpdateLoop())
     tasks.add(updateLoop)
     updateLoop.add_done_callback(tasks.discard)
+
     # reports schedule
     reports = asyncio.create_task(carroReports())
     tasks.add(reports)
