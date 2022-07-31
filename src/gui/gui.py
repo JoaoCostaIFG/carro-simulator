@@ -25,6 +25,9 @@ class GuiWidget(Widget):
     def onChangeHandBrake(self, switchValue):
         self.changeHandBrake(switchValue)
 
+    def onChangeSpeed(self, speedValue):
+        self.ids._speed.value = speedValue
+
 
 class GuiApp(App):
     def __init__(self) -> None:

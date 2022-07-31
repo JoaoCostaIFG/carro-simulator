@@ -14,8 +14,8 @@ from messages.SimMessage import SimMessage
 
 
 def procMsg(canMsg: can.Message) -> None:
-    print(canMsg)
     global bus
+    global gui
 
     try:
         id: MessageType = MessageType(canMsg.arbitration_id)
@@ -31,6 +31,8 @@ def procMsg(canMsg: can.Message) -> None:
             data: bytearray = SimMessage(MessageType.BrakeSystem).unpack(canMsg.data)
         elif id == MessageType.CarStatus:
             data: bytearray = SimMessage(MessageType.CarStatus).unpack(canMsg.data)
+            gui.root.onChangeSpeed(data[0])
+            # TODO show car state
         else:
             # ignore unwanted messages
             pass
