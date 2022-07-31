@@ -34,9 +34,9 @@ def procMsg(canMsg: can.Message) -> None:
         else:
             # ignore unwanted messages
             pass
-    except Struct.error:
+    except Exception as e:
         print(
-            f"Invalid message data: [id={canMsg.arbitration_id}], [data={canMsg.data}].",
+            f"Invalid message data: [id={canMsg.arbitration_id}], [data={canMsg.data}]. {e}",
             file=stderr,
         )
         return

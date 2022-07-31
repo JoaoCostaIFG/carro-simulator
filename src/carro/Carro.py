@@ -40,6 +40,10 @@ class Carro:
 
     @parkingBrake.setter
     def parkingBrake(self, brakeState: bool) -> None:
+        if self._parkingBrakeState == brakeState:
+            # no transition to do
+            return
+
         trans: CarroState = CarroTransition.ParkingBrake
         if self._parkingBrakeState and not brakeState:
             trans = CarroTransition.UnparkingBrake
@@ -62,7 +66,8 @@ class Carro:
 
     def transition(self, trans: CarroTransition) -> CarroState:
         newState: CarroState = Carro._transitions[self._state.value][trans.value]
-        if self._state != CarroState.Invalid:
+        # print(self._state, f"-{trans}->", newState)
+        if newState != CarroState.Invalid:
             self._state = newState
         else:
             print(

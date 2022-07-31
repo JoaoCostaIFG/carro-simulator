@@ -41,13 +41,16 @@ def procMsg(canMsg: can.Message) -> None:
         else:
             # ignore unwanted messages
             pass
-    except Struct.error:
+    except ValueError as e:
         print(
-            f"Invalid message data: [id={canMsg.arbitration_id}], [data={canMsg.data}].",
+            f"Can't apply command sent by frontend: [id={canMsg.arbitration_id}], [data={canMsg.data}]. {e}",
             file=stderr,
         )
-        return
-
+    except Exception as e:
+        print(
+            f"Invalid message data: [id={canMsg.arbitration_id}], [data={canMsg.data}]. {e}",
+            file=stderr,
+        )
 
 def sendMsg(arbitrationId: int, msg: bytearray) -> None:
     global bus
