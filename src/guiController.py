@@ -63,7 +63,7 @@ async def inputReports():
     period: float = 0.1
     while True:
         startTime: float = monotonic()
-        print("AAAAAAAAAAAAAAAAAA")
+        # print("AAAAAAAAAAAAAAAAAA")
         sendMsg(
             MessageType.AccelleratorPedalPosition,
             SimMessage(MessageType.AccelleratorPedalPosition).pack(
@@ -88,7 +88,7 @@ async def main():
     global bus
     global gui
 
-    asyncio.run(gui.async_run())
+    # asyncio.run(gui.async_run())
 
     loop = asyncio.get_running_loop()
     for signal in [SIGINT, SIGTERM]:
@@ -98,9 +98,9 @@ async def main():
     tasks: Set[asyncio.Task] = set()
 
     # gui
-    # guiRun = asyncio.create_task(gui.async_run())
-    # tasks.add(guiRun)
-    # guiRun.add_done_callback(tasks.discard)
+    guiRun = asyncio.create_task(gui.async_run())
+    tasks.add(guiRun)
+    guiRun.add_done_callback(tasks.discard)
     # input value communication
     reportLoop = asyncio.create_task(inputReports())
     tasks.add(reportLoop)
