@@ -3,6 +3,7 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.config import Config
+from kivy_garden.speedmeter import SpeedMeter
 
 from gui.Pedal import Pedal
 from gui.HandBrake import HandBrake

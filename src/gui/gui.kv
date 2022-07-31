@@ -6,15 +6,41 @@
         rows: 2
         cols: 2
         padding: 10
-        spacing: 10
+        spacing: 2
+        SpeedMeter:
+            id: _speed
+            min: 0
+            max: 280
+            tick: 20
+            start_angle: -120
+            end_angle: 120
+            subtick: 5
+            label: 'Km/h'
+            value: 0
+            cadran_color: '#0f0f0f'
+            needle_color: '#ff0000'
+            sectors: (0, '#ffffff')
+        SpeedMeter:
+            id: _rpm
+            max: 8
+            tick: 1
+            start_angle: -120
+            end_angle: 120
+            subtick: 4
+            label: 'rpm'
+            sectors: [0, '#000000', 6, '#ffff00', 7, '#ff0000', 8]
+            sector_width: 5
         GridLayout:
             rows: 2
             cols: 2
-            padding: 10
-            spacing: 10
+            padding: 0
+            spacing: 0
             Label:
                 text: 'Accelerator Pedal' 
+            Label:
+                text: 'Brake Pedal'
             BoxLayout:
+                orientation: 'vertical'
                 Slider:
                     id: _accelSlider
                     min: 0
@@ -24,9 +50,8 @@
                     on_touch_up: root.onChangeAccel(self.value)
                 Label:
                     text: str(_accelSlider.value)
-            Label:
-                text: 'Brake Pedal'
             BoxLayout:
+                orientation: 'vertical'
                 Slider:
                     id: _brakeSlider
                     min: 0
@@ -37,15 +62,12 @@
                 Label:
                     text: str(_brakeSlider.value)
         BoxLayout:
-            padding: 50
+            padding: 100
+            orientation: 'vertical'
             Label:
                 text: 'Hand Brake'
             Switch:
                 active: True
                 id: _parkingSwitch
                 on_active: root.onChangeHandBrake(self.active)
-        Label:
-            text: ''
-        Label:
-            text: ''
         
