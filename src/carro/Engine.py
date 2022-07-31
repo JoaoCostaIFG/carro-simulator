@@ -13,7 +13,7 @@ class Engine:
     def pedal(self, val: int) -> None:
         if val < 0 or val > 100:
             raise ValueError("Pedal value must be in interval [0, 100].")
-        self._pedal = val
+        self._pedal = int(val)
 
     @property
     def acceleration(self) -> float:

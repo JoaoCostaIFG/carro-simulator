@@ -9,7 +9,7 @@ class Pedal:
 
     @position.setter
     def position(self, newPos: int):
-        self._position = newPos
+        self._position = int(newPos)
         print("Changing Position of pedal to -> " + str(newPos))
 
     def setPosition(self, newPos: int):
