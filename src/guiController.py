@@ -1,22 +1,21 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import asyncio
-from struct import Struct
 from typing import List, Set
+from struct import Struct
 from signal import SIGINT, SIGTERM
-from time import monotonic
 from sys import stderr
+from time import monotonic
 
 import can
 
-from carro.Carro import Carro
-from messages.SimMessage import SimMessage
+from gui.gui import GuiApp
 from messages.MessageType import MessageType
+from messages.SimMessage import SimMessage
 
 
 def procMsg(canMsg: can.Message) -> None:
     global bus
-    global c
 
     try:
         id: MessageType = MessageType(canMsg.arbitration_id)
@@ -24,20 +23,14 @@ def procMsg(canMsg: can.Message) -> None:
         print(f"Invalid arbitration ID: [id={canMsg.arbitration_id}].", file=stderr)
         return
 
+    # TODO use the info
     try:
-        if id == MessageType.AccelleratorPedalPosition:
-            data: bytearray = SimMessage(MessageType.AccelleratorPedalPosition).unpack(
-                canMsg.data
-            )
-            c.engine.pedal = data[0]
-        elif id == MessageType.BrakePedalPosition:
-            data: bytearray = SimMessage(MessageType.BrakePedalPosition).unpack(
-                canMsg.data
-            )
-            c.brake.pedal = data[0]
-        elif id == MessageType.ParkingBrake:
-            data: bytearray = SimMessage(MessageType.ParkingBrake).unpack(canMsg.data)
-            c.parkingBrake = data[0]
+        if id == MessageType.Engine:
+            data: bytearray = SimMessage(MessageType.Engine).unpack(canMsg.data)
+        elif id == MessageType.BrakeSystem:
+            data: bytearray = SimMessage(MessageType.BrakeSystem).unpack(canMsg.data)
+        elif id == MessageType.CarStatus:
+            data: bytearray = SimMessage(MessageType.CarStatus).unpack(canMsg.data)
         else:
             # ignore unwanted messages
             pass
@@ -64,23 +57,26 @@ def sendMsg(arbitrationId: int, msg: bytearray) -> None:
         print(f"Message sending failure: [msg={msg}].\n{e}", file=stderr)
 
 
-async def carroReports():
-    global c
+async def inputReports():
+    global gui
 
-    period: float = 0.05
+    period: float = 0.1
     while True:
         startTime: float = monotonic()
+        print("AAAAAAAAAAAAAAAAAA")
         sendMsg(
-            MessageType.Engine,
-            SimMessage(MessageType.Engine).pack(c.engine.acceleration),
+            MessageType.AccelleratorPedalPosition,
+            SimMessage(MessageType.AccelleratorPedalPosition).pack(
+                gui.accelerationPedal.position
+            ),
         )
         sendMsg(
-            MessageType.BrakeSystem,
-            SimMessage(MessageType.BrakeSystem).pack(c.brake.deceleration),
+            MessageType.BrakePedalPosition,
+            SimMessage(MessageType.BrakePedalPosition).pack(gui.brakePedal.position),
         )
         sendMsg(
-            MessageType.CarStatus,
-            SimMessage(MessageType.CarStatus).pack(c.speed, c.state.value),
+            MessageType.ParkingBrake,
+            SimMessage(MessageType.ParkingBrake).pack(gui.handBrake.active),
         )
         endTime: float = monotonic()
 
@@ -88,23 +84,11 @@ async def carroReports():
         await asyncio.sleep(sleepTime)  # wait next period
 
 
-async def carroUpdateLoop():
-    global c
-
-    period: float = 0.025
-    prevTime: float = monotonic()
-    while True:
-        startTime: float = monotonic()
-        c.update(startTime - prevTime)
-        prevTime = startTime
-
-        print(f" state: {c.state} - s: {c.speed}")
-
-        await asyncio.sleep(period)  # wait next tick
-
-
 async def main():
     global bus
+    global gui
+
+    asyncio.run(gui.async_run())
 
     loop = asyncio.get_running_loop()
     for signal in [SIGINT, SIGTERM]:
@@ -113,18 +97,17 @@ async def main():
     # spawn tasks
     tasks: Set[asyncio.Task] = set()
 
-    # carro update loop
-    updateLoop = asyncio.create_task(carroUpdateLoop())
-    tasks.add(updateLoop)
-    updateLoop.add_done_callback(tasks.discard)
-
-    # reports schedule
-    reports = asyncio.create_task(carroReports())
-    tasks.add(reports)
-    reports.add_done_callback(tasks.discard)
+    # gui
+    # guiRun = asyncio.create_task(gui.async_run())
+    # tasks.add(guiRun)
+    # guiRun.add_done_callback(tasks.discard)
+    # input value communication
+    reportLoop = asyncio.create_task(inputReports())
+    tasks.add(reportLoop)
+    reportLoop.add_done_callback(tasks.discard)
 
     canReader = can.AsyncBufferedReader()
-    canLogger = can.Logger("simulator.asc")
+    canLogger = can.Logger("controller.asc")
     listeners: List[can.notifier.MessageRecipient] = [
         canReader,
         canLogger,
@@ -143,6 +126,6 @@ async def main():
 
 
 if __name__ == "__main__":
-    c: Carro = Carro()
+    gui: GuiApp = GuiApp()
     with can.interface.Bus(bustype="socketcan", channel="vcan0", bitrate=500000) as bus:
         asyncio.run(main())

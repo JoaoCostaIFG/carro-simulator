@@ -4,8 +4,8 @@ from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.config import Config
 
-from Pedal import Pedal
-from HandBrake import HandBrake
+from gui.Pedal import Pedal
+from gui.HandBrake import HandBrake
 
 
 class GuiWidget(Widget):

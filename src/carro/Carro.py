@@ -1,12 +1,10 @@
 from sys import stderr
 
-import can
-
 from carro.BrakeSystem import BrakeSystem
 from carro.Engine import Engine
 from carro.CarroState import CarroState
 from carro.CarroTransition import CarroTransition
-from messages.simMessage import SimMessage
+from messages.SimMessage import SimMessage
 
 
 class Carro:
@@ -79,8 +77,7 @@ class Carro:
             deltaSpeed: float = deltaTime * (
                 self._engine.acceleration - self._brakeSystem.deceleration
             )
-            newSpeed: float = self._speed + \
-                deltaSpeed * 3.6  # 0.001 / (1/3600)
+            newSpeed: float = self._speed + deltaSpeed * 3.6  # 0.001 / (1/3600)
             # clamp
             self._speed = min(max(0.0, newSpeed), Carro._maxSpeed)
 
