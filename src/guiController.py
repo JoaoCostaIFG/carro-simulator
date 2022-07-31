@@ -2,7 +2,6 @@
 
 import asyncio
 from typing import List, Set
-from struct import Struct
 from signal import SIGINT, SIGTERM
 from sys import stderr
 from time import monotonic
@@ -15,6 +14,7 @@ from messages.SimMessage import SimMessage
 
 
 def procMsg(canMsg: can.Message) -> None:
+    print(canMsg)
     global bus
 
     try:
@@ -83,10 +83,22 @@ async def inputReports():
         await asyncio.sleep(sleepTime)  # wait next period
 
 
-async def runApp():
-    global gui
+async def busWatch():
+    global bus
 
-    await gui.async_run()
+    canReader = can.AsyncBufferedReader()
+    canLogger = can.Logger("controller.asc")
+    listeners: List[can.notifier.MessageRecipient] = [
+        canReader,
+        canLogger,
+    ]
+    loop = asyncio.get_running_loop()
+    notifier = can.Notifier(bus, listeners=listeners, loop=loop)
+
+    while not asyncio.current_task().cancelled():
+        canMsg: can.Message = await canReader.get_message()
+        procMsg(canMsg)
+    notifier.stop()
 
 
 async def main():
@@ -100,31 +112,21 @@ async def main():
     tasks: Set[asyncio.Task] = set()
 
     # gui
-    guiRun = asyncio.create_task(runApp())
-    tasks.add(guiRun)
-    guiRun.add_done_callback(tasks.discard)
+    busWatchLoop = asyncio.create_task(busWatch())
+    tasks.add(busWatchLoop)
+    busWatchLoop.add_done_callback(tasks.discard)
     # input value communication
     reportLoop = asyncio.create_task(inputReports())
     tasks.add(reportLoop)
     reportLoop.add_done_callback(tasks.discard)
 
-    canReader = can.AsyncBufferedReader()
-    canLogger = can.Logger("controller.asc")
-    listeners: List[can.notifier.MessageRecipient] = [
-        canReader,
-        canLogger,
-    ]
-    notifier = can.Notifier(bus, listeners=listeners, loop=loop)
-
     try:
-        while not asyncio.current_task().cancelled():
-            canMsg: can.Message = await canReader.get_message()
-            procMsg(canMsg)
+        await gui.async_run()
     except asyncio.CancelledError:
         # expected from the signal handler
-        for task in tasks:
-            task.cancel()
-    notifier.stop()
+        pass
+    for task in tasks:
+        task.cancel()
 
 
 if __name__ == "__main__":
