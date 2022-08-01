@@ -8,6 +8,7 @@ from time import monotonic
 
 import can
 from CarLogger import CarLogger
+from carro.CarroState import CarroState
 
 from gui.gui import GuiApp
 from messages.MessageType import MessageType
@@ -32,12 +33,11 @@ def procMsg(canMsg: can.Message) -> None:
             gui.root.onChangeRpm(data[1])
         elif id == MessageType.BrakeSystem:
             data: bytearray = SimMessage(MessageType.BrakeSystem).unpack(canMsg.data)
+            gui.root.onChangeDecel(data[0])
         elif id == MessageType.CarStatus:
             data: bytearray = SimMessage(MessageType.CarStatus).unpack(canMsg.data)
             gui.root.onChangeSpeed(data[0])
-
-            # data[1] -> operational mode
-            # TODO show car state
+            gui.root.onChangeOperMode(CarroState(data[1]).name)
         else:
             # ignore unwanted messages
             pass

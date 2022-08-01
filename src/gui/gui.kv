@@ -20,10 +20,44 @@
                 cadran_color: '#0f0f0f'
                 needle_color: '#ff0000'
                 sectors: (0, '#ffffff')
-
-            Label:
-                id: _acceleration
-                text: 'Acceleration: 0'
+            BoxLayout: 
+                orientation: 'vertical'
+                padding: [0, 40, 0, 0]
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 1, 1
+                    Line:
+                        width: 2
+                        rectangle: self.x + 20, self.y + 10, self.width - 40, self.height - 20
+                Image:
+                    source: 'assets/police_car.png'
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: 0.4
+                    # angle: 0
+                    # canvas.before:
+                    #     PushMatrix
+                    #     Rotate:
+                    #         angle: root.angle
+                    #         axis: 0, 0, 1
+                    #         origin: root.center
+                    # canvas.after:
+                    #     PopMatrix
+                
+                BoxLayout:
+                    orientation: 'vertical'
+                    padding: [0, 40, 0, 20]
+                    Label:
+                        id: _acceleration
+                        text: 'Acceleration: 0'
+                    Label:
+                        id: _deceleration
+                        text: 'Deceleration: 0'
+                    Label:
+                        id: _operMode
+                        text: 'Weight: 1500 Kg'
+                    Label:
+                        text: 'Weight: 1500 Kg'
             SpeedMeter:
                 id: _rpm
                 min: 0

@@ -42,6 +42,10 @@ class GuiWidget(Widget):
 
     def onChangeAccel(self, accelValue):
         self.ids._acceleration.text = f"Acceleration: {str(round(accelValue, 2))}"
+    def onChangeDecel(self, decelValue):
+        self.ids._deceleration.text = f"Deceleration: {str(round(decelValue, 2))}"
+    def onChangeOperMode(self, newMode):
+        self.ids._operMode.text = f"Operational Mode: {str(newMode)}"
 
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
