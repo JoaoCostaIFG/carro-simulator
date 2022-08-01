@@ -1,60 +1,47 @@
 #:kivy 1.0.9
 
 <GuiWidget>:
-    GridLayout:
+    BoxLayout:
         size: root.size
-        rows: 2
-        cols: 2
+        orientation: 'vertical'
         padding: 10
-        spacing: 2
-        SpeedMeter:
-            id: _speed
-            min: 0
-            max: 280
-            tick: 20
-            start_angle: -120
-            end_angle: 120
-            subtick: 5
-            label: 'Km/h'
-            value: 0
-            cadran_color: '#0f0f0f'
-            needle_color: '#ff0000'
-            sectors: (0, '#ffffff')
-        SpeedMeter:
-            id: _rpm
-            min: 0
-            max: 10
-            tick: 1
-            start_angle: -120
-            end_angle: 120
-            subtick: 4
-            label: 'rpm'
-            sectors: [0, '#000000', 8, '#ffff00', 9, '#ff0000', 10]
-            sector_width: 5
-        GridLayout:
-            rows: 2
-            cols: 2
-            padding: 0
-            spacing: 0
+        BoxLayout:
+            orientation: 'horizontal'
+            SpeedMeter:
+                id: _speed
+                min: 0
+                max: 280
+                tick: 20
+                start_angle: -120
+                end_angle: 120
+                subtick: 5
+                label: 'Km/h'
+                value: 0
+                cadran_color: '#0f0f0f'
+                needle_color: '#ff0000'
+                sectors: (0, '#ffffff')
             Label:
-                text: 'Accelerator Pedal' 
-            Label:
-                text: 'Brake Pedal'
+                text: 'Boas'
+            SpeedMeter:
+                id: _rpm
+                min: 0
+                max: 10
+                tick: 1
+                start_angle: -120
+                end_angle: 120
+                subtick: 4
+                label: 'rpm'
+                sectors: [0, '#000000', 8, '#ffff00', 9, '#ff0000', 10]
+                sector_width: 5
+        BoxLayout:
+            orientation: 'horizontal'
             BoxLayout:
                 orientation: 'vertical'
-                Slider:
-                    id: _accelSlider
-                    min: 0
-                    max: 100
-                    step: 1
-                    orientation: 'vertical'
-                    on_touch_up: root.onChangeAccel(self.value)
                 Label:
-                    text: str(_accelSlider.value)
-            BoxLayout:
-                orientation: 'vertical'
+                    text: 'Brake Pedal'
                 Slider:
                     id: _brakeSlider
+                    size_hint_y: 1.6
                     min: 0
                     max: 100
                     step: 1
@@ -62,13 +49,29 @@
                     on_touch_up: root.onChangeBrake(self.value)
                 Label:
                     text: str(_brakeSlider.value)
-        BoxLayout:
-            padding: 100
-            orientation: 'vertical'
-            Label:
-                text: 'Hand Brake'
-            Switch:
-                active: True
-                id: _parkingSwitch
-                on_active: root.onChangeHandBrake(self.active)
+
+            BoxLayout:
+                orientation: 'vertical'
+                Label:
+                    text: 'Accelerator Pedal' 
+                Slider:
+                    id: _accelSlider
+                    size_hint_y: 1.6
+                    min: 0
+                    max: 100
+                    step: 1
+                    orientation: 'vertical'
+                    on_touch_up: root.onChangeAccel(self.value)
+                Label:
+                    text: str(_accelSlider.value)
+
+            BoxLayout:
+                padding: 100
+                orientation: 'vertical'
+                Label:
+                    text: 'Hand Brake'
+                Switch:
+                    active: True
+                    id: _parkingSwitch
+                    on_active: root.onChangeHandBrake(self.active)
         
