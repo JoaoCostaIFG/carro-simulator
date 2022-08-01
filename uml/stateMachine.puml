@@ -1,0 +1,18 @@
+@startuml stateMachine
+
+[*] --> Parked
+Parked --> Ready : UnparkingBrake
+Parked --> Parked : ParkingBrake | Stopped
+Parked --> Invalid : BeganDriving
+
+Ready --> Parked : ParkingBrake
+Ready --> Ready : UnparkingBrake | Stopped
+Ready --> Driving : BeganDriving
+
+Driving --> Driving : UnparkingBrake | BeganDriving
+Driving --> Ready : Stopped
+Driving --> Invalid : ParkingBrake
+
+Invalid --> Invalid : *
+
+@enduml
