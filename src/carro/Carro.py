@@ -63,6 +63,11 @@ class Carro:
     @property
     def brake(self) -> BrakeSystem:
         return self._brakeSystem
+    
+    @property
+    def acceleration(self) -> float:
+        return self._engine.acceleration - self._brakeSystem.deceleration
+
 
     def transition(self, trans: CarroTransition) -> CarroState:
         newState: CarroState = Carro._transitions[self._state.value][trans.value]
@@ -79,9 +84,7 @@ class Carro:
     def update(self, deltaTime: float) -> None:
         # update car speed (care for m/s to km/h conversion)
         if self._state == CarroState.Ready or self._state == CarroState.Driving:
-            deltaSpeed: float = deltaTime * (
-                self._engine.acceleration - self._brakeSystem.deceleration
-            )
+            deltaSpeed: float = deltaTime * self.acceleration
             newSpeed: float = self._speed + deltaSpeed * 3.6  # 0.001 / (1/3600)
             # clamp
             self._speed = min(max(0.0, newSpeed), Carro._maxSpeed)
@@ -94,3 +97,11 @@ class Carro:
             self._timeStopped = 0.0
             if self._speed > 10.0:
                 self.transition(CarroTransition.BeganDriving)
+
+    def setAcceleration(self, wantedAcc: float) -> None:
+        if wantedAcc > 0:
+            self._engine.acceleration = abs(wantedAcc)
+            self._brakeSystem.pedal = 0
+        else:
+            self._engine.pedal = 0
+            self._brakeSystem.deceleration = abs(wantedAcc)

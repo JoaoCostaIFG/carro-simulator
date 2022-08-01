@@ -1,3 +1,6 @@
+from math import ceil
+
+
 class Engine:
     _maxAcceleration: float = 5  # m/s^2
     _maxRPM: int = 8000
@@ -18,6 +21,13 @@ class Engine:
     @property
     def acceleration(self) -> float:
         return Engine._maxAcceleration * (self._pedal / 100.0)
+
+    @acceleration.setter
+    def acceleration(self, val: float) -> None:
+        if val <= 0:
+            self._pedal = 0
+            return
+        self._pedal = min(ceil(val / Engine._maxAcceleration * 100), 100)
 
     @property
     def rpm(self) -> int:
