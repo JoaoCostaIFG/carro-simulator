@@ -49,7 +49,6 @@ def procMsg(canMsg: can.Message) -> None:
 def sendMsg(arbitrationId: int, msg: bytearray) -> None:
     global bus
 
-    # TODO logging
     canMsg: can.Message = can.Message(
         arbitration_id=arbitrationId,
         data=msg,
@@ -91,7 +90,7 @@ async def busWatch():
     global bus
 
     canReader = can.AsyncBufferedReader()
-    canLogger = CarLogger('gui-controller-log')
+    canLogger = CarLogger("gui-controller-log")
     listeners: List[can.notifier.MessageRecipient] = [
         canReader,
         canLogger,
