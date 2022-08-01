@@ -1,3 +1,6 @@
+from math import ceil
+
+
 class BrakeSystem:
     _maxDeceleration: float = 6  # m/s^2
 
@@ -17,3 +20,10 @@ class BrakeSystem:
     @property
     def deceleration(self) -> float:
         return BrakeSystem._maxDeceleration * (self._pedal / 100.0)
+
+    @deceleration.setter
+    def deceleration(self, val: float) -> None:
+        if val <= 0:
+            self._pedal = 0
+            return
+        self._pedal = min(ceil(val / BrakeSystem._maxDeceleration * 100), 100)
