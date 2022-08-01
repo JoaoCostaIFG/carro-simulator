@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import asyncio
-from struct import Struct
 from typing import List, Set
 from signal import SIGINT, SIGTERM
 from time import monotonic
@@ -43,12 +42,12 @@ def procMsg(canMsg: can.Message) -> None:
             pass
     except ValueError as e:
         print(
-            f"Can't apply command sent by frontend: [id={canMsg.arbitration_id}], [data={canMsg.data}]. {e}",
+            f"Can't apply command sent by frontend: [id={canMsg.arbitration_id}], [data={canMsg.data}].\n{e}",
             file=stderr,
         )
     except Exception as e:
         print(
-            f"Invalid message data: [id={canMsg.arbitration_id}], [data={canMsg.data}]. {e}",
+            f"Invalid message data: [id={canMsg.arbitration_id}], [data={canMsg.data}].\n{e}",
             file=stderr,
         )
 
