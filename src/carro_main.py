@@ -7,6 +7,7 @@ from time import monotonic
 from sys import stderr
 
 import can
+from CarLogger import CarLogger
 
 from carro.Carro import Carro
 from messages.SimMessage import SimMessage
@@ -127,7 +128,7 @@ async def main():
     reports.add_done_callback(tasks.discard)
 
     canReader = can.AsyncBufferedReader()
-    canLogger = can.Logger("simulator.asc")
+    canLogger = CarLogger('car-log')
     listeners: List[can.notifier.MessageRecipient] = [
         canReader,
         canLogger,
