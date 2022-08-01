@@ -3,47 +3,57 @@
 import pandas as pd
 import seaborn as sb
 import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
 
 
 from carro.Carro import Carro
 
 
 def doPlot(df, title, outFile):
-    plt.figure(figsize=(40, 20), dpi=300)
+    plt.figure(figsize=(25, 15), dpi=300)
+    plt.title(title)
     # speeds
-    ax = df.plot(
+    ax = sb.lineplot(
+        data=df,
         x="Total elapsed time (s)",
         y="Real vehicle speed (km/h)",
-        legend=False,
         color="b",
     )
-    df.plot(
+    sb.lineplot(
+        data=df,
         x="Total elapsed time (s)",
         y="Vehicle speed (km/h)",
         ax=ax,
-        legend=False,
         color="c",
         alpha=0.4,
     )
-    plt.title(title)
     # accelerations
     ax2 = ax.twinx()
-    df.plot(
+    sb.lineplot(
+        data=df,
         x="Total elapsed time (s)",
         y="Real acceleration (m/s^2)",
         ax=ax2,
-        legend=False,
         color="r",
     )
-    df.plot(
+    sb.lineplot(
+        data=df,
         x="Total elapsed time (s)",
         y="Acceleration (m/s^2)",
         ax=ax2,
-        legend=False,
         color="orange",
         alpha=0.4,
     )
-    ax.figure.legend()
+    plt.legend(
+        handles=[
+            mlines.Line2D([], [], color="blue", label="Real vehicle speed (km/h)"),
+            mlines.Line2D([], [], color="cyan", label="Intended vehicle speed (km/h)"),
+            mlines.Line2D([], [], color="red", label="Real acceleration (m/s^2)"),
+            mlines.Line2D(
+                [], [], color="orange", label="Intended acceleration (m/s^2)"
+            ),
+        ]
+    )
     # plt.show()
     plt.savefig("out/" + outFile)
 
@@ -65,9 +75,14 @@ def main(filename, title):
     df["Real vehicle speed (km/h)"] = speeds
     df["Real acceleration (m/s^2)"] = accs
 
-    doPlot(df, title, title + ".png")
+    fileTitle = title.replace(" ", "")
+    doPlot(df, title, fileTitle + ".png")
     for phase in df["Phase"].unique():
-        doPlot(df[df["Phase"] == phase], f"{title}-{phase}", f"{title}_{phase}.png")
+        doPlot(
+            df[df["Phase"] == phase],
+            f"{title} - {phase}",
+            f"{fileTitle}_{phase}.png",
+        )
 
 
 if __name__ == "__main__":
