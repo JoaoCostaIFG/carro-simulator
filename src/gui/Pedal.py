@@ -9,7 +9,17 @@ class Pedal:
 
     @position.setter
     def position(self, newPos: int):
-        self._position = int(newPos)
+        if newPos >= 0 and newPos <= 100:
+            self._position = int(newPos)
 
     def setPosition(self, newPos: int):
-        self.position = newPos
+        if newPos >= 0 and newPos <= 100:
+            self.position = newPos
+    
+    def incrementPos(self):
+        if self._position >= 0 and self._position < 100:
+            self.position += 1
+    
+    def decrementPos(self):
+        if self._position > 0 and self._position <= 100:
+            self.position -= 1

@@ -12,3 +12,6 @@ class HandBrake:
 
     def setActive(self, newValue: bool):
         self.active = newValue
+
+    def toggleActive(self):
+        self.active = not self.active

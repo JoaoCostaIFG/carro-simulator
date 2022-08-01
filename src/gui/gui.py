@@ -4,26 +4,50 @@ from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.config import Config
 from kivy_garden.speedmeter import SpeedMeter
+from kivy.core.window import Window
 
 from gui.Pedal import Pedal
 from gui.HandBrake import HandBrake
 
 
 class GuiWidget(Widget):
-    def __init__(self, changeAccel, changeBrake, changeHandBrake, **kwargs):
+    def __init__(self, accelPedal : Pedal, brakePedal : Pedal, handBrake : HandBrake, **kwargs):
         super().__init__(**kwargs)
-        self.changeAccel = changeAccel
-        self.changeBrake = changeBrake
-        self.changeHandBrake = changeHandBrake
+        self.accelPedal = accelPedal
+        self.brakePedal = brakePedal
+        self.handBrake = handBrake
+
+        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)
+
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+        self._keyboard = None
+
+    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+        # TODO: CONNECT THE CLASSES WITH THE VALUE DISPLAYED IN THE UI
+        if keycode[1] == 'w':
+           self.brakePedal.incrementPos()
+        elif keycode[1] == 's':
+            self.brakePedal.decrementPos()
+        elif keycode[1] == 'up':
+            self.accelPedal.incrementPos()
+        elif keycode[1] == 'down':
+            self.accelPedal.decrementPos()
+        elif keycode[1] == 'p':
+            self.handBrake.toggleActive()
+        elif keycode[1] == 'escape':
+            print("EXITING...")
+
 
     def onChangeAccel(self, sliderValue):
-        self.changeAccel(sliderValue)
+        self.accelPedal.setPosition(sliderValue)
 
     def onChangeBrake(self, sliderValue):
-        self.changeBrake(sliderValue)
+        self.brakePedal.setPosition(sliderValue)
 
     def onChangeHandBrake(self, switchValue):
-        self.changeHandBrake(switchValue)
+        self.handBrake.setActive(switchValue)
 
     def onChangeSpeed(self, speedValue):
         self.ids._speed.value = speedValue
@@ -45,9 +69,9 @@ class GuiApp(App):
 
     def build(self):
         return GuiWidget(
-            self.accelerationPedal.setPosition,
-            self.brakePedal.setPosition,
-            self.handBrake.setActive,
+            self.accelerationPedal,
+            self.brakePedal,
+            self.handBrake,
         )
 
 
