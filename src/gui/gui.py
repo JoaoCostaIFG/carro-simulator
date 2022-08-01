@@ -5,9 +5,9 @@ from kivy.uix.widget import Widget
 from kivy.config import Config
 from kivy_garden.speedmeter import SpeedMeter
 from kivy.core.window import Window
-
-from gui.Pedal import Pedal
-from gui.HandBrake import HandBrake
+from kivy.app import App
+from kivy.core.window import Window
+from kivy.uix.widget import Widget
 
 
 class GuiWidget(Widget):
@@ -16,6 +16,7 @@ class GuiWidget(Widget):
 
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
+        
 
     def getAccelPos(self):
         return self.ids._accelSlider.value
@@ -39,12 +40,14 @@ class GuiWidget(Widget):
     def onChangeRpm(self, rpmValue):
         self.ids._rpm.value = rpmValue / 1000
 
+    def onChangeAccel(self, accelValue):
+        self.ids._acceleration.text = f"Acceleration: {str(round(accelValue, 2))}"
+
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
         self._keyboard = None
 
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
-        # TODO: CONNECT THE CLASSES WITH THE VALUE DISPLAYED IN THE UI
         if keycode[1] == 'w':
             self.setBrakePos(self.getBrakePos() + 1)
         elif keycode[1] == 's':

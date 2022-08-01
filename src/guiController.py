@@ -28,12 +28,15 @@ def procMsg(canMsg: can.Message) -> None:
     try:
         if id == MessageType.Engine:
             data: bytearray = SimMessage(MessageType.Engine).unpack(canMsg.data)
+            gui.root.onChangeAccel(data[0])
             gui.root.onChangeRpm(data[1])
         elif id == MessageType.BrakeSystem:
             data: bytearray = SimMessage(MessageType.BrakeSystem).unpack(canMsg.data)
         elif id == MessageType.CarStatus:
             data: bytearray = SimMessage(MessageType.CarStatus).unpack(canMsg.data)
             gui.root.onChangeSpeed(data[0])
+
+            # data[1] -> operational mode
             # TODO show car state
         else:
             # ignore unwanted messages
@@ -66,7 +69,6 @@ async def inputReports():
     period: float = 0.1
     while True:
         startTime: float = monotonic()
-        print("Sending: " + str(gui.root.getAccelPos()))
         sendMsg(
             MessageType.AccelleratorPedalPosition,
             SimMessage(MessageType.AccelleratorPedalPosition).pack(int(gui.root.getAccelPos())),
