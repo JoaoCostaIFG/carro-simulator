@@ -6,7 +6,7 @@ from messages.MessageType import _messageFormats, MessageType
 
 class SimMessage:
     def __init__(self, messageType: int) -> None:
-        self.type: MessageType = messageType
+        self.type = MessageType(messageType)
         self.format = _messageFormats.get(messageType)
 
     def unpack(self, payload) -> List:

@@ -7,6 +7,7 @@ from sys import stderr
 from time import monotonic
 
 import can
+from CarLogger import CarLogger
 
 from gui.gui import GuiApp
 from messages.MessageType import MessageType
@@ -90,7 +91,7 @@ async def busWatch():
     global bus
 
     canReader = can.AsyncBufferedReader()
-    canLogger = can.Logger("controller.asc")
+    canLogger = CarLogger('gui-controller-log')
     listeners: List[can.notifier.MessageRecipient] = [
         canReader,
         canLogger,
