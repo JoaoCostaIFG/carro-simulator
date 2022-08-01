@@ -86,5 +86,5 @@ def main(filename, title):
 
 
 if __name__ == "__main__":
-    main("wltp-class1.csv", "WLTP Class 1")
-    main("wltp-class3.csv", "WLTP Class 3")
+    main("wltp_tests/wltp-class1.csv", "WLTP Class 1")
+    main("wltp_tests/wltp-class3.csv", "WLTP Class 3")
