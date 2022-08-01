@@ -52,6 +52,7 @@ def procMsg(canMsg: can.Message) -> None:
             file=stderr,
         )
 
+
 def sendMsg(arbitrationId: int, msg: bytearray) -> None:
     global bus
 
@@ -75,7 +76,7 @@ async def carroReports():
         startTime: float = monotonic()
         sendMsg(
             MessageType.Engine,
-            SimMessage(MessageType.Engine).pack(c.engine.acceleration),
+            SimMessage(MessageType.Engine).pack(c.engine.acceleration, c.engine.rpm),
         )
         sendMsg(
             MessageType.BrakeSystem,

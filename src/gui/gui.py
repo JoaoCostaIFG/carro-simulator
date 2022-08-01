@@ -28,6 +28,9 @@ class GuiWidget(Widget):
     def onChangeSpeed(self, speedValue):
         self.ids._speed.value = speedValue
 
+    def onChangeRpm(self, rpmValue):
+        self.ids._rpm.value = rpmValue / 1000
+
 
 class GuiApp(App):
     def __init__(self) -> None:

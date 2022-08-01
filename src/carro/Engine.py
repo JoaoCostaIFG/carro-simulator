@@ -20,5 +20,5 @@ class Engine:
         return Engine._maxAcceleration * (self._pedal / 100.0)
 
     @property
-    def rpm(self) -> float:
-        return Engine._maxRPM * (self._pedal / 100.0)
+    def rpm(self) -> int:
+        return round(Engine._maxRPM * (self._pedal / 100.0))

@@ -22,13 +22,14 @@
             sectors: (0, '#ffffff')
         SpeedMeter:
             id: _rpm
-            max: 8
+            min: 0
+            max: 10
             tick: 1
             start_angle: -120
             end_angle: 120
             subtick: 4
             label: 'rpm'
-            sectors: [0, '#000000', 6, '#ffff00', 7, '#ff0000', 8]
+            sectors: [0, '#000000', 8, '#ffff00', 9, '#ff0000', 10]
             sector_width: 5
         GridLayout:
             rows: 2

@@ -27,6 +27,7 @@ def procMsg(canMsg: can.Message) -> None:
     try:
         if id == MessageType.Engine:
             data: bytearray = SimMessage(MessageType.Engine).unpack(canMsg.data)
+            gui.root.onChangeRpm(data[1])
         elif id == MessageType.BrakeSystem:
             data: bytearray = SimMessage(MessageType.BrakeSystem).unpack(canMsg.data)
         elif id == MessageType.CarStatus:
