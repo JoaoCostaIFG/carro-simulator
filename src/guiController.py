@@ -66,19 +66,18 @@ async def inputReports():
     period: float = 0.1
     while True:
         startTime: float = monotonic()
+        print("Sending: " + str(gui.root.getAccelPos()))
         sendMsg(
             MessageType.AccelleratorPedalPosition,
-            SimMessage(MessageType.AccelleratorPedalPosition).pack(
-                gui.accelerationPedal.position
-            ),
+            SimMessage(MessageType.AccelleratorPedalPosition).pack(int(gui.root.getAccelPos())),
         )
         sendMsg(
             MessageType.BrakePedalPosition,
-            SimMessage(MessageType.BrakePedalPosition).pack(gui.brakePedal.position),
+            SimMessage(MessageType.BrakePedalPosition).pack(int(gui.root.getBrakePos())),
         )
         sendMsg(
             MessageType.ParkingBrake,
-            SimMessage(MessageType.ParkingBrake).pack(gui.handBrake.active),
+            SimMessage(MessageType.ParkingBrake).pack(int(gui.root.getHandBrakeValue())),
         )
         endTime: float = monotonic()
 

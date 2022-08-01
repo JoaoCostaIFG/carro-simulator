@@ -46,7 +46,6 @@
                     max: 100
                     step: 1
                     orientation: 'vertical'
-                    on_touch_up: root.onChangeBrake(self.value)
                 Label:
                     text: str(_brakeSlider.value)
 
@@ -61,7 +60,6 @@
                     max: 100
                     step: 1
                     orientation: 'vertical'
-                    on_touch_up: root.onChangeAccel(self.value)
                 Label:
                     text: str(_accelSlider.value)
 
@@ -73,5 +71,4 @@
                 Switch:
                     active: True
                     id: _parkingSwitch
-                    on_active: root.onChangeHandBrake(self.active)
         
