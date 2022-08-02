@@ -41,6 +41,10 @@ class GuiWidget(Widget):
 
     def onChangeSpeed(self, speedValue):
         self.ids._speed.value = speedValue
+        normalizedSpeed = -1 if speedValue < 10 else ((250 - speedValue) / (240.) + 0.05) / 2
+
+        if abs(self.ids._road.anim_delay - normalizedSpeed) > 0.05:
+            self.ids._road.anim_delay = normalizedSpeed
 
     def onChangeRpm(self, rpmValue):
         self.ids._rpm.value = rpmValue / 1000
