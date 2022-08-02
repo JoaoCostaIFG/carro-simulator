@@ -1,0 +1,9 @@
+Kivy==2.1.0
+Kivy-Garden==0.1.5
+kivy-garden.speedmeter @ https://github.com/kivy-garden/speedmeter/archive/refs/heads/master.zip
+kivy3 @ https://bitbucket.org/joaocostaifg/kivy3/get/3a73b9431507.zip
+kiwisolver==1.4.4
+matplotlib==3.5.2
+pandas==1.4.3
+python-can==4.0.0
+seaborn==0.11.2
