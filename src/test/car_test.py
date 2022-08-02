@@ -51,6 +51,20 @@ class TestCar:
         assert self.car._transitions[CarroState.Parked.value][CarroTransition.BeganDriving.value] == CarroState.Invalid
         assert self.car._transitions[CarroState.Driving.value][CarroTransition.ParkingBrake.value] == CarroState.Invalid
 
+    def test_car_speed(self):
+        self.car.parkingBrake = False
+        self.car.setAcceleration(2)
+        self.car.update(1)
+        finalSpeed : float = 2 * 1 * 3.6
+        assert self.car.speed - finalSpeed < MARGIN
+
+    def test_limit_speed(self):
+        self.car.parkingBrake = False
+        self.car.setAcceleration(5)
+        self.car.update(60)
+
+        assert self.car.speed - self.car._maxSpeed < MARGIN
+        
     def test_accel_rpm(self):
         # The car engine shall produce the maximum acceleration of 5 m/s2 at 8000rpm.
         self.car.setAcceleration(self.car.engine.maxAcceleration)
@@ -58,7 +72,46 @@ class TestCar:
 
     def test_accel_pedal(self):
         # The car engine produced acceleration shall be vary linearly with the accelerator pedal position.
-        self.car.acceleration
+        
+        x1, y1 = (0, 0)
+        x2, y2 = (100, self.car.engine.maxAcceleration)
+        
+        slope = (y2-y1) / (x2-x1) 
+        
+        for pedalPos in range(1, 100):
+            prevPedal = self.car.engine.pedal
+            prevAccel = self.car.engine.acceleration
+            self.car.engine.pedal = pedalPos
+            
+            newSlope = (self.car.engine.acceleration - prevAccel) / (self.car.engine.pedal - prevPedal)
+            
+            if(abs(newSlope - slope) > MARGIN):
+                pytest.fail("")
+        
+        
+    def test_max_deceleration(self):
+        # The car brake system shall produce a maximum deceleration of 6 m/s2.
+        self.car.brake.pedal = 100
+        assert self.car.brake.deceleration == self.car.brake._maxDeceleration
+        
+    def test_deceleration_pedal(self):
+        # The car brake system produced deceleration shall be vary linearly with the brake pedal position
+        
+        x1, y1 = (0, 0)
+
+        x2, y2 = (100, self.car.brake._maxDeceleration)
+        
+        slope = (y2-y1) / (x2-x1) 
+        
+        for pedalPos in range(1, 100):
+            prevPedal = self.car.brake.pedal
+            prevDecel = self.car.brake.deceleration
+            self.car.brake.pedal = pedalPos
+            
+            newSlope = (self.car.brake.deceleration - prevDecel) / (self.car.brake.pedal - prevPedal)
+            
+            if(abs(newSlope - slope) > MARGIN):
+                pytest.fail("")
 
     def test_set_negative_accel(self):
         accelValue : int = 1
