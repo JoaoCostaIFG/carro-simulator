@@ -11,12 +11,21 @@
             allow_stretch: True
             keep_ratio: False
             size_hint: (1, 0.35)
-            # canvas.before:
-            #     Color:
-            #         rgba: 1, 0, 1, 1
-            #     Line:
-            #         width: 3
-            #         rectangle: self.x + 20, self.y + 10, self.width - 40, self.height - 20
+            canvas.after:
+                Color:
+                    rgba: 0.4, 0.88, 1, 1
+                Line:
+                    width: 2
+                    ellipse: self.x , self.y, self.width, 40 , -90, 90
+                Color:
+                    rgba: 0, 0, 0, 1
+                Line:
+                    width: 50
+                    ellipse: self.x , self.y - 50, self.width, 40 , -90, 90
+        # BoxLayout:
+        #     size_hint: (1, 0.05)
+
+
 
         BoxLayout:
             orientation: 'horizontal'
