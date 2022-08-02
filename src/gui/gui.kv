@@ -34,16 +34,6 @@
                     allow_stretch: True
                     keep_ratio: True
                     size_hint_y: 0.4
-                    # angle: 0
-                    # canvas.before:
-                    #     PushMatrix
-                    #     Rotate:
-                    #         angle: root.angle
-                    #         axis: 0, 0, 1
-                    #         origin: root.center
-                    # canvas.after:
-                    #     PopMatrix
-                
                 BoxLayout:
                     orientation: 'vertical'
                     padding: [0, 40, 0, 20]
@@ -55,7 +45,7 @@
                         text: 'Deceleration: 0'
                     Label:
                         id: _operMode
-                        text: 'Weight: 1500 Kg'
+                        text: 'Operational Mode: Parked'
                     Label:
                         text: 'Weight: 1500 Kg'
             SpeedMeter:

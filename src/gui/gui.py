@@ -16,21 +16,24 @@ class GuiWidget(Widget):
 
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
-        
 
     def getAccelPos(self):
         return self.ids._accelSlider.value
+
     def getBrakePos(self):
         return self.ids._brakeSlider.value
+
     def getHandBrakeValue(self):
         return self.ids._parkingSwitch.active
 
     def setAccelPos(self, value):
         if (value >= 0 and value <= 100):
             self.ids._accelSlider.value = value
+
     def setBrakePos(self, value):
         if (value >= 0 and value <= 100):
             self.ids._brakeSlider.value = value
+
     def setHandBrakeValue(self, value):
         self.ids._parkingSwitch.active = value
 
@@ -42,8 +45,10 @@ class GuiWidget(Widget):
 
     def onChangeAccel(self, accelValue):
         self.ids._acceleration.text = f"Acceleration: {str(round(accelValue, 2))}"
+
     def onChangeDecel(self, decelValue):
         self.ids._deceleration.text = f"Deceleration: {str(round(decelValue, 2))}"
+
     def onChangeOperMode(self, newMode):
         self.ids._operMode.text = f"Operational Mode: {str(newMode)}"
 
