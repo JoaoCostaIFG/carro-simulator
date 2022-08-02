@@ -80,7 +80,7 @@ class GuiApp(App):
         super().__init__()
 
         Config.set("graphics", "width", 800)
-        Config.set("graphics", "height", 600)
+        Config.set("graphics", "height", 800)
 
     def build(self):
         return GuiWidget()

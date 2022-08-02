@@ -4,13 +4,24 @@
     BoxLayout:
         size: root.size
         orientation: 'vertical'
-        padding: 10
         Image:
             id: _road
             source: 'assets/spaceroad.gif'
             anim_delay: -1
+            allow_stretch: True
+            keep_ratio: False
+            size_hint: (1, 0.35)
+            # canvas.before:
+            #     Color:
+            #         rgba: 1, 0, 1, 1
+            #     Line:
+            #         width: 3
+            #         rectangle: self.x + 20, self.y + 10, self.width - 40, self.height - 20
+
         BoxLayout:
             orientation: 'horizontal'
+            padding: [0, 20, 0, 20]
+            size_hint: (1, 0.40)
             SpeedMeter:
                 id: _speed
                 min: 0
@@ -26,7 +37,6 @@
                 sectors: (0, '#000000')
             BoxLayout: 
                 orientation: 'vertical'
-                padding: [0, 40, 0, 0]
                 canvas.before:
                     Color:
                         rgba: 1, 0, 1, 1
@@ -79,6 +89,7 @@
                 sector_width: 5
         BoxLayout:
             orientation: 'horizontal'
+            size_hint: (1, 0.25)
             BoxLayout:
                 orientation: 'vertical'
                 Label:
@@ -112,8 +123,8 @@
                     markup: True
 
             BoxLayout:
-                padding: 100
                 orientation: 'vertical'
+                padding: (0, self.height / 4)
                 Label:
                     text: '[font=screaming_neon][size=18][color=64e0ff]Hand Brake[/color][/size][/font]' 
                     markup: True
