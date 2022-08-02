@@ -14,13 +14,12 @@ obj_file = os.path.join(_this_path, "./lowpoly_car.obj")
 mtl_file = os.path.join(_this_path, "./lowpoly_car.mtl")
 
 
-class CarroWidget(Widget):
+class CarroWidget(Renderer):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(shader_file=shader_file, **kwargs)
 
-        self.renderer = Renderer(shader_file=shader_file)
         scene = Scene()
-        camera = PerspectiveCamera(60, 1, 1, 1000)
+        camera = PerspectiveCamera(60, 1, 1, 50)
         loader = OBJMTLLoader()
         obj = loader.load(obj_file, mtl_file)
 
@@ -29,10 +28,10 @@ class CarroWidget(Widget):
             obj.pos.z = -3
             obj.pos.y = -0.5
 
-        self.renderer.render(scene, camera)
+        self.render(scene, camera)
         self.car = scene.children
 
-        self.renderer.bind(size=self._adjust_aspect)
+        self.bind(size=self._adjust_aspect)
         Clock.schedule_interval(self._rotate_obj, 1. / 20)
 
     def _rotate_obj(self, dt):
@@ -40,9 +39,9 @@ class CarroWidget(Widget):
             peca.rot.y += 2
 
     def _adjust_aspect(self, inst, val):
-        rsize = self.renderer.size
+        rsize = self.size
         aspect = rsize[0] / float(rsize[1])
-        self.renderer.camera.aspect = aspect
+        self.camera.aspect = aspect
 
 
 if __name__ == '__main__':
@@ -50,7 +49,7 @@ if __name__ == '__main__':
         def build(self):
             root = FloatLayout()
             self.carro = CarroWidget()
-            root.add_widget(self.carro.renderer)
+            root.add_widget(self.carro)
             return root
 
     MainApp().run()
