@@ -54,7 +54,7 @@ def sendMsg(arbitrationId: int, msg: bytearray) -> None:
         data=msg,
     )
     try:
-        # TODO deal with timeouts
+        # TODO deal with timeouts (this is a blocking task)
         bus.send(canMsg)
     except can.CanError as e:
         print(f"Message sending failure: [msg={msg}].\n{e}", file=stderr)
