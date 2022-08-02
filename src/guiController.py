@@ -8,6 +8,7 @@ from time import monotonic
 
 import can
 from CarLogger import CarLogger
+from carro.CarroState import CarroState
 
 from gui.gui import GuiApp
 from messages.MessageType import MessageType
@@ -28,13 +29,15 @@ def procMsg(canMsg: can.Message) -> None:
     try:
         if id == MessageType.Engine:
             data: bytearray = SimMessage(MessageType.Engine).unpack(canMsg.data)
+            gui.root.onChangeAccel(data[0])
             gui.root.onChangeRpm(data[1])
         elif id == MessageType.BrakeSystem:
             data: bytearray = SimMessage(MessageType.BrakeSystem).unpack(canMsg.data)
+            gui.root.onChangeDecel(data[0])
         elif id == MessageType.CarStatus:
             data: bytearray = SimMessage(MessageType.CarStatus).unpack(canMsg.data)
             gui.root.onChangeSpeed(data[0])
-            # TODO show car state
+            gui.root.onChangeOperMode(CarroState(data[1]).name)
         else:
             # ignore unwanted messages
             pass
@@ -68,17 +71,15 @@ async def inputReports():
         startTime: float = monotonic()
         sendMsg(
             MessageType.AccelleratorPedalPosition,
-            SimMessage(MessageType.AccelleratorPedalPosition).pack(
-                gui.accelerationPedal.position
-            ),
+            SimMessage(MessageType.AccelleratorPedalPosition).pack(int(gui.root.getAccelPos())),
         )
         sendMsg(
             MessageType.BrakePedalPosition,
-            SimMessage(MessageType.BrakePedalPosition).pack(gui.brakePedal.position),
+            SimMessage(MessageType.BrakePedalPosition).pack(int(gui.root.getBrakePos())),
         )
         sendMsg(
             MessageType.ParkingBrake,
-            SimMessage(MessageType.ParkingBrake).pack(gui.handBrake.active),
+            SimMessage(MessageType.ParkingBrake).pack(int(gui.root.getHandBrakeValue())),
         )
         endTime: float = monotonic()
 
