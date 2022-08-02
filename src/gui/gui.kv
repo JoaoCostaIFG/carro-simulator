@@ -14,12 +14,12 @@
                 tick: 20
                 start_angle: -120
                 end_angle: 120
-                subtick: 5
+                subtick: 2
                 label: 'Km/h'
                 value: 0
-                cadran_color: '#0f0f0f'
-                needle_color: '#ff0000'
-                sectors: (0, '#ffffff')
+                cadran_color: '#64e0ff'
+                needle_color: '#ff00ff'
+                sectors: (0, '#000000')
             BoxLayout: 
                 orientation: 'vertical'
                 padding: [0, 40, 0, 0]
@@ -41,35 +41,45 @@
                 CarroWidget:
                 BoxLayout:
                     orientation: 'vertical'
-                    padding: [0, 40, 0, 20]
-                    Label:
-                        id: _acceleration
-                        text: 'Acceleration: 0'
-                    Label:
-                        id: _deceleration
-                        text: 'Deceleration: 0'
+                    padding: [0, 0, 0, 20]
                     Label:
                         id: _operMode
-                        text: 'Operational Mode: Parked'
+                        opMode: 'Parked'
+                        text: '[font=screaming_neon][color=ffe0ff]' + str(_operMode.opMode) + '[/color][/font]' 
+                        markup: True
                     Label:
-                        text: 'Weight: 1500 Kg'
+                        id: _acceleration
+                        accVal: 0
+                        text: '[font=screaming_neon][color=ffe0ff]Acceleration -- ' + str(_acceleration.accVal) + ' m/s[sup]2[/sup][/color][/font]' 
+                        markup: True
+                    Label:
+                        id: _deceleration
+                        decVal: 0
+                        text: '[font=screaming_neon][color=ffe0ff]Deceleration -- ' + str(_deceleration.decVal) + ' m/s[sup]2[/sup][/color][/font]' 
+                        markup: True
+                    Label:
+                        text: '[font=screaming_neon][color=ffe0ff]Weight -- 1500 Kg[/color][/font]' 
+                        markup: True
             SpeedMeter:
                 id: _rpm
                 min: 0
-                max: 10
+                max: 9
                 tick: 1
                 start_angle: -120
                 end_angle: 120
                 subtick: 4
                 label: 'rpm'
-                sectors: [0, '#000000', 8, '#ffff00', 9, '#ff0000', 10]
+                cadran_color: '#64e0ff'
+                needle_color: '#ff00ff'
+                sectors: [0, '#000000', 7, '#ff20c6', 8, '#ff2079', 9]
                 sector_width: 5
         BoxLayout:
             orientation: 'horizontal'
             BoxLayout:
                 orientation: 'vertical'
                 Label:
-                    text: 'Brake Pedal'
+                    text: '[font=screaming_neon][size=18][color=64e0ff]Brake Pedal[/color][/size][/font]' 
+                    markup: True
                 Slider:
                     id: _brakeSlider
                     size_hint_y: 1.6
@@ -78,12 +88,14 @@
                     step: 1
                     orientation: 'vertical'
                 Label:
-                    text: str(_brakeSlider.value)
+                    text: '[font=screaming_neon][color=64e0ff]' + str(_brakeSlider.value) + '[/color][/font]' 
+                    markup: True
 
             BoxLayout:
                 orientation: 'vertical'
                 Label:
-                    text: 'Accelerator Pedal' 
+                    text: '[font=screaming_neon][size=18][color=64e0ff]Accelerator Pedal[/color][/size][/font]' 
+                    markup: True
                 Slider:
                     id: _accelSlider
                     size_hint_y: 1.6
@@ -92,13 +104,15 @@
                     step: 1
                     orientation: 'vertical'
                 Label:
-                    text: str(_accelSlider.value)
+                    text: '[font=screaming_neon][color=64e0ff]' + str(_accelSlider.value) + '[/color][/font]' 
+                    markup: True
 
             BoxLayout:
                 padding: 100
                 orientation: 'vertical'
                 Label:
-                    text: 'Hand Brake'
+                    text: '[font=screaming_neon][size=18][color=64e0ff]Hand Brake[/color][/size][/font]' 
+                    markup: True
                 Switch:
                     active: True
                     id: _parkingSwitch

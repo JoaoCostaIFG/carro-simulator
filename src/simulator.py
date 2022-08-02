@@ -21,7 +21,8 @@ def procMsg(canMsg: can.Message) -> None:
     try:
         id: MessageType = MessageType(canMsg.arbitration_id)
     except ValueError:
-        print(f"Invalid arbitration ID: [id={canMsg.arbitration_id}].", file=stderr)
+        print(
+            f"Invalid arbitration ID: [id={canMsg.arbitration_id}].", file=stderr)
         return
 
     try:
@@ -36,7 +37,8 @@ def procMsg(canMsg: can.Message) -> None:
             )
             c.brake.pedal = data[0]
         elif id == MessageType.ParkingBrake:
-            data: bytearray = SimMessage(MessageType.ParkingBrake).unpack(canMsg.data)
+            data: bytearray = SimMessage(
+                MessageType.ParkingBrake).unpack(canMsg.data)
             c.parkingBrake = data[0]
         else:
             # ignore unwanted messages
@@ -75,7 +77,8 @@ async def carroReports():
         startTime: float = monotonic()
         sendMsg(
             MessageType.Engine,
-            SimMessage(MessageType.Engine).pack(c.engine.acceleration, c.engine.rpm),
+            SimMessage(MessageType.Engine).pack(
+                c.engine.acceleration, c.engine.rpm),
         )
         sendMsg(
             MessageType.BrakeSystem,
@@ -100,8 +103,6 @@ async def carroUpdateLoop():
         startTime: float = monotonic()
         c.update(startTime - prevTime)
         prevTime = startTime
-
-        print(f" state: {c.state} - s: {c.speed}")
 
         await asyncio.sleep(period)  # wait next tick
 

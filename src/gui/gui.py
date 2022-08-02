@@ -9,7 +9,7 @@ from kivy.app import App
 from kivy.core.window import Window
 from kivy.uix.widget import Widget
 
-from carrowidget.CarroWidget import CarroWidget
+from gui.carrowidget.CarroWidget import CarroWidget
 
 
 class GuiWidget(Widget):
@@ -46,13 +46,13 @@ class GuiWidget(Widget):
         self.ids._rpm.value = rpmValue / 1000
 
     def onChangeAccel(self, accelValue):
-        self.ids._acceleration.text = f"Acceleration: {str(round(accelValue, 2))}"
+        self.ids._acceleration.accVal = round(accelValue, 2)
 
     def onChangeDecel(self, decelValue):
-        self.ids._deceleration.text = f"Deceleration: {str(round(decelValue, 2))}"
+        self.ids._deceleration.decVal = round(decelValue, 2)
 
     def onChangeOperMode(self, newMode):
-        self.ids._operMode.text = f"Operational Mode: {str(newMode)}"
+        self.ids._operMode.opMode = str(newMode)
 
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
