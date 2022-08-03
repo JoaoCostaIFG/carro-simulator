@@ -4,6 +4,10 @@
 
 Build a simulated car in _Python_. For this, you will be given a set of requirements and a very basic architecture and an interface control specification
 
+## Demo
+
+![Demo](animation.gif)
+
 # Tech Stack
 
 - [python](https://www.python.org/) for the ECU (Electronic Control Unit)
